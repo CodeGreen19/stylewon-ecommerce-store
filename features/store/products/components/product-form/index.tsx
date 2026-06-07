@@ -72,6 +72,11 @@ export function ProductForm({
         <Header
           form={form}
           title={type === "CREATE" ? "Add new product" : "Update product"}
+          description={
+            type === "CREATE"
+              ? "Add any proudct and it's variants to manage."
+              : "Update any products and it's variants to manage."
+          }
         />
       </form.AppForm>
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 lg:gap-6">

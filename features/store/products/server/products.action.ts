@@ -11,11 +11,12 @@ import { updateTag } from "next/cache";
 import { eq } from "drizzle-orm";
 
 export async function addNewProduct(inputs: ProductType) {
-  const { data, success } = productSchema.safeParse(inputs);
-  if (!success) {
-    return { message: "Invalid inputs" };
-  }
+  // const { data, success } = productSchema.safeParse(inputs);
+  // if (!success) {
+  //   return { message: "Invalid inputs" };
+  // }
 
+  const data = inputs;
   // add product
   const [product] = await db.insert(products).values(data).returning();
 
@@ -43,6 +44,7 @@ export async function addNewProduct(inputs: ProductType) {
 
   // update cache
   updateTag("products");
+  updateTag("inventory");
   return { message: "New product added" };
 }
 
@@ -89,6 +91,7 @@ export async function updateProduct(
 
   // update cache
   updateTag("products");
+  updateTag("inventory");
   return { message: "Updated" };
 }
 
@@ -96,6 +99,7 @@ export async function deleteSingleProduct(productId: string) {
   await db.delete(products).where(eq(products.id, productId));
 
   updateTag("products");
+  updateTag("inventory");
   return { message: "Deleted" };
 }
 

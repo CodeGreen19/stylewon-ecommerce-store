@@ -1,6 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Trash } from "lucide-react";
 
@@ -10,13 +16,14 @@ import { productDefaultValues } from "../../schemas/product.schema";
 
 export const Header = withForm({
   defaultValues: productDefaultValues,
-  props: { title: "" },
-  render: function Render({ form, title }) {
+  props: { title: "", description: "" },
+  render: function Render({ form, title, description }) {
     const router = useRouter();
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle variant="form">{title}</CardTitle>
+      <Card className="p-0 shadow-none md:ring-0 bg-background">
+        <CardHeader className="p-4 md:p-0">
+          <CardTitle className="text-2xl font-bold truncate">{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
           <CardAction>
             <Field orientation={"horizontal"}>
               <Button
@@ -26,7 +33,7 @@ export const Header = withForm({
                   router.push("/store/products");
                 }}
               >
-                Discard <Trash />
+                <span className="hidden md:inline">Discard</span> <Trash />
               </Button>
               <form.SubscribeButton />
             </Field>

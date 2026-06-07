@@ -1,191 +1,225 @@
-// app/cart/page.tsx
-
 "use client";
-
-import Image from "next/image";
-import {
-  ChevronRight,
-  Minus,
-  Plus,
-  Trash2,
-  ArrowRight,
-  Tag,
-} from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-
-const cartItems = [
-  {
-    id: 1,
-    name: "Gradient Graphic T-shirt",
-    size: "Large",
-    color: "White",
-    price: 145,
-    image: "/products/product-1.png",
-  },
-  {
-    id: 2,
-    name: "Checkered Shirt",
-    size: "Medium",
-    color: "Red",
-    price: 180,
-    image: "/products/product-5.png",
-  },
-  {
-    id: 3,
-    name: "Skinny Fit Jeans",
-    size: "Large",
-    color: "Blue",
-    price: 240,
-    image: "/products/product-4.png",
-  },
-];
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader2, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useTransition } from "react";
+import { toast } from "sonner";
+import {
+  deleteCartItem,
+  getCart,
+  updateCartItemQuantity,
+} from "../server/cart.action";
 
 export function CartPage() {
+  const { isPending, error, data } = useQuery({
+    queryKey: ["cart"],
+    queryFn: () => getCart(),
+  });
+
+  if (isPending) {
+    return <div>Pending...</div>;
+  }
+  if (error) {
+    return <div>Error occurs</div>;
+  }
+
+  if (!data.cart) {
+    return <EmptyCart />;
+  }
+  const cart = data.cart;
+
+  const total = cart.cartItems.reduce(
+    (prev, curr) =>
+      (curr.variant.priceDiff + curr.variant.product.basePrice) * curr.qty +
+      prev,
+    0,
+  );
   return (
-    <main className="max-w-7xl m-auto py-6 px-4 lg:py-10">
-      {/* Breadcrumb */}
-      <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <span>Home</span>
+    <div className=" max-w-7xl py-10 m-auto">
+      <CartHeader />
 
-        <ChevronRight className="h-4 w-4" />
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_350px]">
+        <CartList items={cart.cartItems} />
 
-        <span className="font-medium text-primary">Cart</span>
+        <CartSummary total={total} />
+      </div>
+    </div>
+  );
+}
+
+export function CartHeader() {
+  return (
+    <div>
+      <h1 className="text-3xl font-semibold">Shopping Cart</h1>
+
+      <p className="text-muted-foreground mt-2">
+        Review and update your items.
+      </p>
+    </div>
+  );
+}
+
+type CartListProps = {
+  items: NonNullable<Awaited<ReturnType<typeof getCart>>["cart"]>["cartItems"];
+};
+
+export function CartList({ items }: CartListProps) {
+  return (
+    <div className="space-y-4">
+      {items.map((item) => (
+        <CartItem key={item.id} item={item} />
+      ))}
+    </div>
+  );
+}
+
+export function CartItem({
+  item,
+}: {
+  item: NonNullable<
+    Awaited<ReturnType<typeof getCart>>["cart"]
+  >["cartItems"][number];
+}) {
+  const imageUrl =
+    item.variant.product.images.length > 0
+      ? item.variant.product.images[0]
+      : "/images/dummy-image.jpg";
+
+  const subTotal =
+    (item.variant.product.basePrice + item.variant.priceDiff) * item.qty;
+  return (
+    <Card className="p-4">
+      <CardHeader>
+        <CardTitle>{item.variant.product.name}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex gap-4">
+          <div className=" rounded-lg overflow-hidden">
+            <Image height={100} width={100} alt="cart-img" src={imageUrl} />
+          </div>
+
+          <div className="flex-1">
+            <p className="text-muted-foreground text-sm"></p>
+
+            <div className="mt-4 flex items-center justify-between">
+              <QuantitySelector item={item} />
+
+              <RemoveCartItem cartItemId={item.id} />
+            </div>
+          </div>
+
+          <div className="font-medium">&#2547;{subTotal}</div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function QuantitySelector({
+  item,
+}: {
+  item: NonNullable<
+    Awaited<ReturnType<typeof getCart>>["cart"]
+  >["cartItems"][number];
+}) {
+  const [pending, startTransition] = useTransition();
+  const qc = useQueryClient();
+
+  const updateQty = (qty: number) => {
+    startTransition(async () => {
+      const res = await updateCartItemQuantity({
+        cartItemId: item.id,
+        qty,
+      });
+      toast.message(res.message);
+      qc.invalidateQueries({ queryKey: ["cart"] });
+    });
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button
+        size="icon"
+        variant="outline"
+        disabled={pending}
+        onClick={() => updateQty(item.qty - 1)}
+      >
+        <Minus />
+      </Button>
+
+      <div className="w-8 text-center">
+        {pending ? (
+          <Loader2 className="size-4 animate-spin mx-auto" />
+        ) : (
+          item.qty
+        )}
       </div>
 
-      {/* Title */}
-      <h1 className="mb-8 text-3xl font-black uppercase tracking-tight md:text-5xl">
-        Your Cart
-      </h1>
+      <Button
+        size="icon"
+        variant="outline"
+        disabled={pending}
+        onClick={() => updateQty(item.qty + 1)}
+      >
+        <Plus />
+      </Button>
+    </div>
+  );
+}
 
-      {/* Main Layout */}
-      <section className="grid gap-6 xl:grid-cols-[1fr_420px]">
-        {/* Cart Items */}
-        <div className="rounded-[24px] border">
-          {cartItems.map((item, index) => (
-            <div key={item.id}>
-              <div className="flex flex-col gap-5 p-4 sm:flex-row sm:items-start sm:justify-between sm:p-6">
-                {/* Left */}
-                <div className="flex gap-4">
-                  {/* Image */}
-                  <div className="relative h-[110px] w-[100px] shrink-0 overflow-hidden rounded-[14px] bg-[#F0EEED]">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      className="object-contain p-2"
-                    />
-                  </div>
+export function RemoveCartItem({ cartItemId }: { cartItemId: string }) {
+  const [pending, startTransition] = useTransition();
+  const qc = useQueryClient();
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      disabled={pending}
+      onClick={() => {
+        startTransition(async () => {
+          await deleteCartItem(cartItemId);
+        });
+        qc.invalidateQueries({ queryKey: ["cart"] });
+      }}
+    >
+      <Trash2 className="size-4" />
+    </Button>
+  );
+}
 
-                  {/* Info */}
-                  <div className="flex flex-col">
-                    <h2 className="text-lg font-bold leading-tight">
-                      {item.name}
-                    </h2>
+export function CartSummary({ total }: { total: number }) {
+  return (
+    <Card className="h-fit p-6 sticky top-6">
+      <h2 className="font-semibold">Order Summary</h2>
 
-                    <div className="mt-2 space-y-1 text-sm text-muted-foreground">
-                      <p>
-                        Size:{" "}
-                        <span className="text-foreground">{item.size}</span>
-                      </p>
+      <div className="mt-6 flex justify-between">
+        <span>Total</span>
 
-                      <p>
-                        Color:{" "}
-                        <span className="text-foreground">{item.color}</span>
-                      </p>
-                    </div>
+        <span className="font-semibold">${total.toFixed(2)}</span>
+      </div>
 
-                    <p className="mt-4 text-2xl font-bold">${item.price}</p>
-                  </div>
-                </div>
+      <Button
+        nativeButton={false}
+        className="mt-6 w-full"
+        render={<Link href={"/checkout"}></Link>}
+      >
+        Checkout
+      </Button>
+    </Card>
+  );
+}
 
-                {/* Right */}
-                <div className="flex items-end justify-between sm:h-full sm:flex-col">
-                  {/* Delete */}
-                  <button className="ml-auto text-red-500 transition hover:opacity-70">
-                    <Trash2 className="h-5 w-5" />
-                  </button>
+export function EmptyCart() {
+  return (
+    <div className="flex min-h-[50vh] flex-col items-center justify-center">
+      <ShoppingCart className="size-12 text-muted-foreground" />
 
-                  {/* Quantity */}
-                  <div className="flex h-[44px] items-center justify-between rounded-full bg-[#F0F0F0] px-5 sm:w-[126px]">
-                    <button className="transition hover:opacity-70">
-                      <Minus className="h-4 w-4" />
-                    </button>
+      <h2 className="mt-4 text-xl font-medium">Your cart is empty</h2>
 
-                    <span className="text-sm font-medium">1</span>
-
-                    <button className="transition hover:opacity-70">
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {index !== cartItems.length - 1 && <Separator />}
-            </div>
-          ))}
-        </div>
-
-        {/* Order Summary */}
-        <aside className="h-fit rounded-[24px] border p-6">
-          <h2 className="text-2xl font-bold">Order Summary</h2>
-
-          {/* Summary */}
-          <div className="mt-6 space-y-5">
-            <div className="flex items-center justify-between">
-              <span className="text-lg text-muted-foreground">Subtotal</span>
-
-              <span className="text-lg font-bold">$565</span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-lg text-muted-foreground">
-                Discount (-20%)
-              </span>
-
-              <span className="text-lg font-bold text-red-500">-$113</span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-lg text-muted-foreground">
-                Delivery Fee
-              </span>
-
-              <span className="text-lg font-bold">$15</span>
-            </div>
-
-            <Separator />
-
-            <div className="flex items-center justify-between">
-              <span className="text-xl font-medium">Total</span>
-
-              <span className="text-3xl font-bold">$467</span>
-            </div>
-          </div>
-
-          {/* Promo Code */}
-          <div className="mt-6 flex flex-col gap-4 sm:flex-row">
-            <div className="relative flex-1">
-              <Tag className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-
-              <Input
-                placeholder="Add promo code"
-                className="h-[48px] rounded-full border-0 bg-[#F0F0F0] pl-11 shadow-none focus-visible:ring-0"
-              />
-            </div>
-
-            <Button className="h-[48px] rounded-full px-8">Apply</Button>
-          </div>
-
-          {/* Checkout */}
-          <Button className="mt-6 h-[56px] w-full rounded-full text-base font-medium">
-            Go to Checkout
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </aside>
-      </section>
-    </main>
+      <p className="text-muted-foreground mt-2">Add products to get started.</p>
+    </div>
   );
 }

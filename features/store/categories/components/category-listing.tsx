@@ -46,218 +46,56 @@ import {
   updateCategory,
 } from "../server/categories.action";
 import { getAllCategories } from "../server/categories.query";
+import { useRouter } from "next/navigation";
 
 type CategoryType = Awaited<ReturnType<typeof getAllCategories>>[number];
 
-export function CategoriesWithProducts({
+export function CategoriesListings({
   categories,
 }: {
   categories: CategoryType[];
 }) {
-  const [selectedCategory, setSelectedCategory] =
-    React.useState<CategoryType | null>(null);
   return (
-    <div className="flex flex-col lg:flex-row gap-4">
-      <CategoryListings categories={categories} />
-      <ProductsOnCategory selectedCategory={selectedCategory} />
+    <div>
+      <CategoryList categories={categories} />
     </div>
   );
 }
 
-function ProductsOnCategory({
-  selectedCategory,
-}: {
-  selectedCategory: CategoryType | null;
-}) {
+export function CategoryList({ categories }: { categories: CategoryType[] }) {
+  const router = useRouter();
   return (
-    <Card className="min-h-[500px]">
-      <CardHeader>
-        <CardTitle>{selectedCategory?.name || "Select category"}</CardTitle>
-        <CardDescription>Manage products inside this category</CardDescription>
-
-        {/* <Dialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
-        <DialogTrigger
-          render={
-            <Button className="w-full md:w-auto">
-              <Package2 className="mr-2 h-4 w-4" />
-              Manage Products
-            </Button>
-          }
-        />
-
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Select Products</DialogTitle>
-
-            <DialogDescription>
-              Add or remove products from this category.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-
-            <Input
-              placeholder="Search products..."
-              className="pl-9"
-              value={productSearch}
-              onChange={(e) => setProductSearch(e.target.value)}
-            />
+    <div className="space-y-4">
+      <Card className="p-4 pt-0 md:p-0 shadow-none md:ring-0">
+        <CardHeader className="p-0">
+          <CardTitle className="text-2xl">Categories</CardTitle>
+          <CardDescription>Manage your product categories</CardDescription>
+          <CardAction>
+            <CategoryCreateDialogButton />
+          </CardAction>
+        </CardHeader>
+      </Card>
+      <div className="px-4 md:px-0">
+        {categories.length === 0 && (
+          <div className="w-full h-32 text-muted-foreground text-sm border rounded-lg border-dashed flex items-center justify-center">
+            No Categories !
           </div>
-
-          <ScrollArea className="h-[350px] rounded-lg border">
-            <div className="space-y-2 p-3">
-              {filteredProducts.map((product) => {
-                const checked = selectedProducts.includes(product.id);
-
-                return (
-                  <div
-                    key={product.id}
-                    className="flex items-center justify-between rounded-xl border p-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        checked={checked}
-                        onCheckedChange={(value) => {
-                          if (value) {
-                            setSelectedProducts((prev) => [
-                              ...prev,
-                              product.id,
-                            ]);
-                          } else {
-                            setSelectedProducts((prev) =>
-                              prev.filter((id) => id !== product.id),
-                            );
-                          }
-                        }}
-                      />
-
-                      <div>
-                        <p className="font-medium">{product.name}</p>
-
-                        <p className="text-xs text-muted-foreground">
-                          SKU: {product.sku}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="font-medium">${product.price}</p>
-
-                      <p className="text-xs text-muted-foreground">
-                        {product.stock} in stock
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </ScrollArea>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsProductDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-
-            <Button onClick={handleSaveProducts}>Save Changes</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog> */}
-        <CardAction>
-          <Button>Manage product</Button>
-        </CardAction>
-      </CardHeader>
-
-      <Separator />
-
-      <CardContent className="p-4 md:p-6">
-        {/* {selectedCategoryProducts.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {selectedCategoryProducts.map((product) => (
-            <Card key={product.id} className="border-muted">
-              <CardContent className="p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1">
-                    <h3 className="font-semibold">{product.name}</h3>
-
-                    <p className="text-sm text-muted-foreground">
-                      {product.sku}
-                    </p>
-                  </div>
-
-                  <Badge variant="secondary">{product.stock} left</Badge>
-                </div>
-
-                <div className="mt-6 flex items-center justify-between">
-                  <p className="text-lg font-bold">${product.price}</p>
-
-                  <Badge>Product</Badge>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted">
-            <Package2 className="h-7 w-7 text-muted-foreground" />
-          </div>
-
-          <h3 className="mt-4 text-lg font-semibold">No products found</h3>
-
-          <p className="mt-1 text-center text-sm text-muted-foreground">
-            Add products to this category to display them here.
-          </p>
-
-          <Button className="mt-5" onClick={() => setIsProductDialogOpen(true)}>
-            Add Products
-          </Button>
-        </div>
-      )} */}
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis
-        atque enim cumque illum, quasi blanditiis optio esse! Dolores,
-        recusandae provident ut incidunt minima corrupti aspernatur rerum
-        dolore, quos quaerat aperiam?
-      </CardContent>
-    </Card>
-  );
-}
-
-export function CategoryListings({
-  categories,
-}: {
-  categories: CategoryType[];
-}) {
-  const [selectedCategoryId, setSelectedCategoryId] = React.useState("");
-  return (
-    <Card className="w-full lg:w-[320px] self-start lg:min-w-[320px]">
-      <CardHeader>
-        <CardTitle className="text-lg">Categories</CardTitle>
-        <CardDescription>Manage your product categories</CardDescription>
-        <CardAction>
-          <CategoryCreateDialogButton />
-        </CardAction>
-      </CardHeader>
-      <Separator />
-      <CardContent className="p-3">
-        <div className="space-y-2">
+        )}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
           {categories.map((category) => {
-            const productCount = 10;
-
-            const isActive = selectedCategoryId === category.id;
+            const productCount = category.productCount;
 
             return (
               <div
                 key={category.id}
-                onClick={() => setSelectedCategoryId(category.id)}
-                className={`group flex w-full items-center justify-between rounded-xl border p-3 text-left transition-all ${
-                  isActive ? "border-primary bg-primary/5" : "hover:bg-muted"
-                }`}
+                className={`group flex w-full items-center justify-between rounded-xl border p-3 text-left transition-all`}
               >
-                <div className="flex items-center gap-3 overflow-hidden">
+                <div
+                  onClick={() =>
+                    router.push(`/store/categories/${category.id}/add-products`)
+                  }
+                  className="flex items-center gap-3 overflow-hidden cursor-pointer"
+                >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
                     <FolderKanban className="h-5 w-5" />
                   </div>
@@ -278,8 +116,8 @@ export function CategoryListings({
             );
           })}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -293,7 +131,6 @@ function CategoryDeleteDialogButton({ category }: { category: CategoryType }) {
           <Button
             size="icon"
             variant="ghost"
-            className="opacity-0 transition-opacity group-hover:opacity-100"
             onClick={(e) => e.stopPropagation()}
           >
             <Trash2 className="h-4 w-4 text-destructive" />
@@ -351,8 +188,8 @@ function CategoryCreateDialogButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button size="icon">
-            <Plus className="h-4 w-4" />
+          <Button>
+            Add <Plus className="h-4 w-4" />
           </Button>
         }
       />
@@ -424,7 +261,6 @@ function CategoryUpdateDialogButton({ category }: { category: CategoryType }) {
           <Button
             size="icon"
             variant="ghost"
-            className="opacity-0 transition-opacity group-hover:opacity-100"
             onClick={(e) => e.stopPropagation()}
           >
             <PenBox className="h-4 w-4 " />

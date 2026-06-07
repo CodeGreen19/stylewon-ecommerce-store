@@ -14,7 +14,7 @@ export function StoreLayout(props: LayoutProps<"/">) {
           <Suspense fallback={<div>loading...</div>}>
             <StoreHeader />
           </Suspense>
-          <div className="px-4 pb-10 md:px-6 lg:px-12 lg:pt-4 ">
+          <div className="px-0 pb-10 md:px-6 lg:px-12 lg:pt-4 ">
             {props.children}
           </div>
         </main>

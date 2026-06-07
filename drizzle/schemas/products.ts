@@ -9,12 +9,14 @@ import {
 } from "drizzle-orm/pg-core";
 import { createdAt, id, updatedAt } from "../helpers";
 import { relations } from "drizzle-orm";
+import { productsToCategories } from "./categories";
+import { cartItems } from "./carts";
 
 export const products = pgTable("products", {
   id,
   name: varchar("name", { length: 100 }).notNull(),
   description: text("description"),
-  images: text("images").array(),
+  images: text("images").array().notNull(),
 
   basePrice: integer("base_price").notNull(),
   onSale: boolean("on_sale").notNull().default(false),
@@ -87,14 +89,16 @@ export const productOptionValues = pgTable("product_option_values", {
 export const productsRelations = relations(products, ({ many }) => ({
   productVariants: many(productVariants),
   productOptions: many(productOptions),
+  categories: many(productsToCategories),
 }));
 export const productVariantsRelations = relations(
   productVariants,
-  ({ one }) => ({
+  ({ one, many }) => ({
     product: one(products, {
       fields: [productVariants.productId],
       references: [products.id],
     }),
+    cartItems: many(cartItems),
   }),
 );
 

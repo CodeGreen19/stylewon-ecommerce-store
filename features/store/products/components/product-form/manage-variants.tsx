@@ -68,7 +68,7 @@ export const ManageVariants = withForm({
     return (
       <Card>
         <CardHeader>
-          <CardTitle variant="form">Variants</CardTitle>
+          <CardTitle>Variants</CardTitle>
           <CardDescription>Product Variants is listed here</CardDescription>
           <CardAction>
             <ProductVariantsDialog

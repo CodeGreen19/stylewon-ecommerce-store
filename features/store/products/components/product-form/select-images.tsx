@@ -24,7 +24,7 @@ export const SelectImages = withForm({
     return (
       <Card>
         <CardHeader>
-          <CardTitle variant="form">Select Images</CardTitle>
+          <CardTitle>Select Images</CardTitle>
 
           <CardAction>
             <form.AppField

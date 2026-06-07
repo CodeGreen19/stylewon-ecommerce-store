@@ -1,0 +1,141 @@
+"use client";
+
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef, Row } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import Image from "next/image";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { getAllInventory } from "../server/inventory.query";
+
+export type InventoryColumnType = Awaited<
+  ReturnType<typeof getAllInventory>
+>[number];
+export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        indeterminate={table.getIsSomePageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+
+  {
+    header: "Name",
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-start gap-2">
+          <Image
+            height={40}
+            width={40}
+            className="rounded-lg object-cover size-10"
+            src={
+              (row.original.product.images && row.original.product.images[0]) ||
+              "/images/dummy-img.jpg"
+            }
+            alt={"product img"}
+          />
+          <div className="truncate">
+            <div>{row.original.product.name}</div>
+            <div className="text-muted-foreground">{row.original.label}</div>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    header: "Price",
+    cell: ({ row }) => {
+      const { basePrice, discountInPercent } = row.original.product;
+      return (
+        <div>
+          {basePrice * (1 - discountInPercent / 100) + row.original.priceDiff}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "sku",
+    header: "SKU",
+  },
+  {
+    header: "Stock",
+    cell: ({ row }) => {
+      const stock = row.original.stock;
+      const trackInventory = row.original.product.trackInventory;
+      return (
+        <div>
+          {!trackInventory ? (
+            <Badge variant={stock === 0 ? "destructive" : "default"}>
+              {stock > 0 ? "In stock" : "Out of stock"}
+            </Badge>
+          ) : stock > 0 ? (
+            stock
+          ) : (
+            <Badge variant={"destructive"}>{"Out of stock"}</Badge>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return <ColumnDropdownMenu row={row} />;
+    },
+  },
+];
+
+function ColumnDropdownMenu({ row }: { row: Row<InventoryColumnType> }) {
+  return (
+    <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          }
+        ></DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              render={
+                <Link
+                  href={`/store/products/${row.original.product.id}/update`}
+                />
+              }
+            >
+              Update product
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}

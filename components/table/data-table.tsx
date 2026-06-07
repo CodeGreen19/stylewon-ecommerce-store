@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
 
 import {
@@ -16,8 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "./data-table-pagination";
+import React from "react";
 import { DataTableHeader } from "./data-table-header";
+import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -28,26 +30,34 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+
+    onColumnVisibilityChange: setColumnVisibility,
+    state: {
+      columnVisibility,
+    },
   });
 
   return (
-    <main className="mt-4">
-      <section className=" mb-2">
+    <main className="md:border rounded-lg">
+      <section className="p-4">
         <DataTableHeader table={table} />
       </section>
-      <section className="overflow-hidden rounded-sm bg-card border">
+      <section className="overflow-hidden rounded-sm bg-background border-b">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead className="p-4" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -68,7 +78,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell className="p-4" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -90,7 +100,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </section>
-      <div className="p-4">
+      <div className="py-4">
         <DataTablePagination table={table} />
       </div>
     </main>

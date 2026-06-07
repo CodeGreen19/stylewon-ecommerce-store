@@ -14,9 +14,8 @@ export const Footer = withForm({
   render: function Render({ form }) {
     const router = useRouter();
     return (
-      <Card className="w-full bg-background shadow-none outline-none ring-0 border-none">
-        <CardHeader>
-          <CardTitle variant="form"></CardTitle>
+      <Card className="p-0 shadow-none md:ring-0 border-none bg-background">
+        <CardHeader className=" p-4 md:p-0">
           <CardAction>
             <Field orientation={"horizontal"}>
               <Button

@@ -51,18 +51,28 @@ export const productsColumn: ColumnDef<ProductColumnType>[] = [
     header: "Name",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center justify-start gap-1">
+        <div className="flex items-center justify-start gap-2">
           <Image
             height={40}
             width={40}
             className="rounded-lg object-cover size-10"
             src={
               (row.original.images && row.original.images[0]) ||
-              "/svgs/empty-picture.svg"
+              "/images/dummy-img.jpg"
             }
             alt={"product img"}
           />
-          <div className="truncate">{row.original.name}</div>
+          <div>
+            <div className="truncate">{row.original.name}</div>
+            {row.original.productVariants.length > 0 &&
+              !row.original.productVariants.some(
+                (v) => v.label === "default",
+              ) && (
+                <div className="text-muted-foreground">
+                  {row.original.productVariants.length} variants
+                </div>
+              )}
+          </div>
         </div>
       );
     },

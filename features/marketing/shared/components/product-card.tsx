@@ -2,86 +2,62 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Rating } from "react-simple-star-rating";
-
-export interface Product {
-  id: number;
-  title: string;
-  rating: number;
-  price: number;
-  oldPrice?: number;
-  discount?: number;
-}
-
-export const products: Product[] = [
-  {
-    id: 1,
-    title: "T-shirt with Tape Details",
-    rating: 4.5,
-    price: 120,
-  },
-  {
-    id: 2,
-    title: "Skinny Fit Jeans",
-    rating: 2.5,
-    price: 240,
-    oldPrice: 260,
-    discount: 20,
-  },
-  {
-    id: 3,
-    title: "Checkered Shirt",
-    rating: 4.5,
-    price: 180,
-  },
-  {
-    id: 4,
-    title: "Sleeve Striped T-shirt",
-    rating: 4.5,
-    price: 130,
-    oldPrice: 160,
-    discount: 30,
-  },
-];
+import { getProducts } from "../../home/server/home.query";
+import Image from "next/image";
+import Link from "next/link";
 
 interface ProductCardProps {
-  product: Product;
+  product: Awaited<ReturnType<typeof getProducts>>[number];
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const imageSrc =
+    product.images.length > 0 ? product.images[0] : "/svgs/empty-picture.svg";
+
   return (
-    <div className="group">
-      <div className="overflow-hidden rounded-[20px]">
-        <div
-          className={`aspect-3/4 w-full transition-transform duration-300 group-hover:scale-105 bg-muted`}
-        />
-      </div>
+    <Link href={`/products/${product.id}`}>
+      <div className="group">
+        <div className="overflow-hidden rounded-[20px]">
+          <div
+            className={`aspect-3/4 w-full transition-transform duration-300 group-hover:scale-105 bg-muted`}
+          >
+            <Image
+              src={imageSrc}
+              height={400}
+              width={400}
+              alt="product-img"
+              className="h-full w-full object-cover "
+            />
+          </div>
+        </div>
 
-      <div className="mt-4 space-y-2">
-        <h3 className="text-base font-semibold md:text-lg truncate">
-          {product.title}
-        </h3>
+        <div className="mt-4 space-y-2">
+          <h3 className="text-base font-semibold md:text-lg truncate">
+            {product.name}
+          </h3>
 
-        <ProductRating rating={product.rating} />
+          <ProductRating rating={5} />
 
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-lg font-bold md:text-2xl">
-            ${product.price}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-lg font-bold md:text-2xl">
+              {product.basePrice * (1 - product.discountInPercent / 100)}
+            </span>
 
-          {product.oldPrice && (
-            <>
-              <span className="text-lg font-bold text-black/40 line-through md:text-2xl">
-                ${product.oldPrice}
-              </span>
+            {product.onSale && (
+              <>
+                <span className="text-lg font-bold text-black/40 line-through md:text-2xl">
+                  {product.basePrice}
+                </span>
 
-              <Badge variant={"destructive"} className="p-3 text-sm">
-                {product.discount}%
-              </Badge>
-            </>
-          )}
+                <Badge variant={"destructive"} className="p-3 text-sm">
+                  {product.discountInPercent}%
+                </Badge>
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

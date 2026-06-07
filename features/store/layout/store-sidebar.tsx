@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { storeSidebarMenu } from "@/constants/store-sidebar-menu-item";
 import { cn } from "@/lib/utils";
-import { CloudSun } from "lucide-react";
+import { CloudSun, LayoutDashboard } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -27,10 +27,10 @@ export function StoreSidebar(props: ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="h-12 pl-4 text-2xl font-black flex items-start">
+      <SidebarHeader className="h-14 pl-4 text-2xl font-black flex items-start justify-end">
         {isCollapsed ? "S" : "Stylewon"}
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="p-2 group-data-[state=collapsed]:p-0">
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarMenu>
@@ -40,9 +40,9 @@ export function StoreSidebar(props: ComponentProps<typeof Sidebar>) {
                   tooltip={item.title}
                   render={<Link href={item.url} />}
                   className={cn(
-                    "rounded-full text-muted-foreground",
+                    "px-4 py-5 text-muted-foreground hover:bg-secondary",
                     pathname.startsWith(item.url)
-                      ? "bg-primary text-white hover:bg-primary hover:text-white active:bg-primary active:text-white"
+                      ? "bg-primary text-black hover:bg-primary hover:text-black active:bg-primary active:text-black"
                       : "",
                   )}
                 >

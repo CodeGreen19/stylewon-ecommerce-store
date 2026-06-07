@@ -50,7 +50,7 @@ export function MediaLibraryButtonWrapper({
   };
 
   return (
-    <Button onClick={openWidget} {...props}>
+    <Button variant={"secondary"} onClick={openWidget} {...props}>
       {children}
     </Button>
   );

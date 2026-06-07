@@ -10,10 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CreditCard, LogOut, Settings, User } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { CreditCard, LoaderIcon, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
+import { toast } from "sonner";
 
 interface UserButtonProps {
   children: ReactNode;
@@ -22,12 +24,20 @@ interface UserButtonProps {
 
 export function UserButtonWrapper({ children, type }: UserButtonProps) {
   const router = useRouter();
+  const { data, isPending } = authClient.useSession();
   const [user, setUser] = useState<{ name: string; email: string } | null>(
     null,
   );
 
-  // 2. If user exists, render the full Shadcn Dropdown Menu
-  if (!user) {
+  if (isPending) {
+    return (
+      <Button size={"icon"} variant={"ghost"} className={"animate-spin"}>
+        <LoaderIcon />
+      </Button>
+    );
+  }
+
+  if (!data) {
     return (
       <Button
         size={"icon"}
@@ -38,7 +48,7 @@ export function UserButtonWrapper({ children, type }: UserButtonProps) {
       </Button>
     );
   }
-  if (user && type === "MOBILE") {
+  if (data && type === "MOBILE") {
     return (
       <Button
         size={"icon"}
@@ -107,6 +117,15 @@ export function UserButtonWrapper({ children, type }: UserButtonProps) {
           <DropdownMenuItem
             variant="destructive"
             className="text-destructive focus:text-destructive cursor-pointer"
+            onClick={() =>
+              authClient.signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    toast.success("Signout successfully");
+                  },
+                },
+              })
+            }
           >
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>

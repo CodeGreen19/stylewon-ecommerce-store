@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { CategoriesWithProducts } from "../components/categories-with-products";
+import { CategoriesListings } from "../components/category-listing";
 import { getAllCategories } from "../server/categories.query";
 
 export function CategoryPage() {
@@ -15,5 +15,5 @@ export function CategoryPage() {
 async function Categories() {
   const categories = await getAllCategories();
 
-  return <CategoriesWithProducts categories={categories} />;
+  return <CategoriesListings categories={categories} />;
 }

@@ -22,12 +22,15 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 type AccountLink = {
   label: string;
-  link: string;
   icon: LucideIcon;
+  link?: string;
+  isButtton?: boolean;
 };
 
 export const accountLinks: AccountLink[] = [
@@ -51,10 +54,16 @@ export const accountLinks: AccountLink[] = [
     link: "/account/settings",
     icon: Settings,
   },
+  {
+    label: "Signout",
+    isButtton: true,
+    icon: Settings,
+  },
 ];
 
 export function AccountLayout(props: LayoutProps<"/account">) {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
@@ -71,15 +80,39 @@ export function AccountLayout(props: LayoutProps<"/account">) {
                   <SidebarMenu>
                     {accountLinks.map((item) => (
                       <SidebarMenuItem key={item.label}>
-                        <SidebarMenuButton
-                          render={
-                            <Link href={item.link}>
-                              <item.icon />
-                              <span>{item.label}</span>
-                            </Link>
-                          }
-                          isActive={pathname.startsWith(item.link)}
-                        ></SidebarMenuButton>
+                        {item.link && (
+                          <SidebarMenuButton
+                            render={
+                              <Link href={item.link}>
+                                <item.icon />
+                                <span>{item.label}</span>
+                              </Link>
+                            }
+                            isActive={pathname.startsWith(item.link)}
+                          ></SidebarMenuButton>
+                        )}
+                        {item.isButtton && (
+                          <SidebarMenuButton
+                            render={
+                              <Button
+                                onClick={() => {
+                                  if (item.label === "Signout") {
+                                    authClient.signOut({
+                                      fetchOptions: {
+                                        onSuccess: () => {
+                                          router.push("/");
+                                        },
+                                      },
+                                    });
+                                  }
+                                }}
+                              >
+                                <item.icon />
+                                <span>{item.label}</span>
+                              </Button>
+                            }
+                          ></SidebarMenuButton>
+                        )}
                       </SidebarMenuItem>
                     ))}
                   </SidebarMenu>

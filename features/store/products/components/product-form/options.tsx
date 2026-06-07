@@ -83,7 +83,7 @@ export const Options = withForm({
     return (
       <Card>
         <CardHeader>
-          <CardTitle variant="form">Options</CardTitle>
+          <CardTitle>Options</CardTitle>
           <CardDescription>
             Does your product come in different options, like size, color or
             material? Add them here
@@ -366,7 +366,7 @@ const ProductOptionDialog = withForm({
       >
         <DialogTrigger
           render={
-            <Button>
+            <Button variant={"secondary"}>
               Add Options <Plus />
             </Button>
           }

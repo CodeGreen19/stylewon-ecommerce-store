@@ -1,16 +1,27 @@
-"use client";
 import { Button } from "@/components/ui/button";
-import { ProductCard, products } from "../../shared/components/product-card";
+import { Suspense } from "react";
+import { ProductCard } from "../../shared/components/product-card";
 import { SectionTitle } from "../../shared/components/section-title";
+import { getProductsByCategoryName } from "../server/home.query";
 
 export function NewArrivalsSection() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NewArrivalsSectionListing />
+    </Suspense>
+  );
+}
+
+async function NewArrivalsSectionListing() {
+  const res = await getProductsByCategoryName("New arrivals");
+
   return (
     <section className=" py-16">
       <div className="mx-auto max-w-7xl px-4">
         <SectionTitle title="New Arrivals" />
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          {products.map((product) => (
+          {res.map(({ product }) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

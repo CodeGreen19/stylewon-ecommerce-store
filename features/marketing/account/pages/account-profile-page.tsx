@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,13 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { authClient } from "@/lib/auth-client";
 
 export function AccountProfilePage() {
-  const user = {
-    name: "Code Green",
-    email: "codegreen@example.com",
-    phone: "+880 1234-567890",
-  };
+  const { data, isPending } = authClient.useSession();
 
   return (
     <section className="space-y-6">
@@ -33,9 +31,17 @@ export function AccountProfilePage() {
 
         <CardContent className="space-y-6">
           <div className="grid gap-4 sm:grid-cols-2">
-            <InfoItem label="Full Name" value={user.name} />
-            <InfoItem label="Email Address" value={user.email} />
-            <InfoItem label="Phone Number" value={user.phone} />
+            {isPending ? (
+              <div>Loading...</div>
+            ) : (
+              data && (
+                <>
+                  <InfoItem label="Full Name" value={data.user.name} />
+                  <InfoItem label="Email Address" value={data.user.email} />
+                  {/* <InfoItem label="Phone Number" value={user.phone} /> */}
+                </>
+              )
+            )}
           </div>
 
           <Button>Edit Profile</Button>

@@ -19,18 +19,6 @@ export const storeSidebarMenu: SidebarMenuType[] = [
     title: "Products",
     icon: ShoppingBag,
     url: "/store/products",
-    subMenu: [
-      { title: "Add new product", url: "/store/products/add-new" },
-      {
-        title: "Update product",
-        url: "/store/products/[productId]/update",
-      },
-
-      {
-        title: "Product details",
-        url: "/store/products/[productId]/view",
-      },
-    ],
   },
   {
     title: "Inventory",
