@@ -6,18 +6,14 @@ import { Suspense } from "react";
 export function StoreLayout(props: LayoutProps<"/">) {
   return (
     <SidebarProvider>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense>
         <StoreSidebar variant="sidebar" collapsible="icon" />
       </Suspense>
       <SidebarInset>
-        <main>
-          <Suspense fallback={<div>loading...</div>}>
-            <StoreHeader />
-          </Suspense>
-          <div className="px-0 pb-10 md:px-6 lg:px-12 lg:pt-4 ">
-            {props.children}
-          </div>
-        </main>
+        <Suspense>
+          <StoreHeader />
+        </Suspense>
+        <main className="pb-10 md:px-6 ">{props.children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

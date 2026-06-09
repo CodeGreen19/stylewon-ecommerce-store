@@ -130,10 +130,10 @@ function VariantSummaryGrid({
         const Icon = item.icon;
 
         return (
-          <Card key={item.title} className="border-border/50 rounded-2xl">
+          <Card key={item.title} className="border-border/50">
             <CardHeader>
               <CardTitle>
-                <div className="bg-muted flex size-11 items-center justify-center rounded-xl">
+                <div className="bg-muted flex size-11 items-center justify-center ">
                   <Icon className="text-muted-foreground size-5" />
                 </div>
               </CardTitle>
@@ -177,7 +177,6 @@ const ProductVariantsDialog = withForm({
         onSubmit: z.object({ variants: z.array(productVariantSchema) }),
       },
       onSubmit: ({ value }) => {
-        console.log("sfasd", value);
         mainForm.setFieldValue("productVariants", value.variants);
         setOpen(false);
       },
@@ -223,10 +222,7 @@ const ProductVariantsDialog = withForm({
                 {(field) => (
                   <div className="max-h-[60vh] overflow-y-auto md:p-4  space-y-2 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                     {field.state.value.map((variant, index) => (
-                      <div
-                        key={index}
-                        className="border p-4  rounded-sm space-y-2"
-                      >
+                      <div key={index} className="border p-4  space-y-2">
                         <div className="flex items-center justify-between">
                           <Badge variant={"secondary"}>{variant.label}</Badge>
                           <form.AppField

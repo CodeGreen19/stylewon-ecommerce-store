@@ -10,6 +10,7 @@ import {
 import { storeSidebarMenu } from "@/constants/store-sidebar-menu-item";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
 
 export function StoreHeader() {
   const pathname = usePathname();
@@ -17,8 +18,9 @@ export function StoreHeader() {
     pathname.startsWith(value.url),
   );
   return (
-    <header className="h-14 flex items-center justify-start gap-2 px-2">
+    <header className="h-14 flex items-center justify-start gap-2 p-2">
       <SidebarTrigger />
+      <Separator orientation="vertical" />
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

@@ -62,22 +62,30 @@ export function CategoriesListings({
   );
 }
 
+export function CategoryHeader() {
+  return (
+    <Card className="p-0 md:ring-0 bg-background">
+      <CardHeader className="p-4 md:p-0">
+        <CardTitle className="text-2xl font-bold truncate">
+          Categories
+        </CardTitle>
+        <CardDescription>Manage your product categories</CardDescription>
+        <CardAction>
+          <CategoryCreateDialogButton />
+        </CardAction>
+      </CardHeader>
+    </Card>
+  );
+}
+
 export function CategoryList({ categories }: { categories: CategoryType[] }) {
   const router = useRouter();
   return (
     <div className="space-y-4">
-      <Card className="p-4 pt-0 md:p-0 shadow-none md:ring-0">
-        <CardHeader className="p-0">
-          <CardTitle className="text-2xl">Categories</CardTitle>
-          <CardDescription>Manage your product categories</CardDescription>
-          <CardAction>
-            <CategoryCreateDialogButton />
-          </CardAction>
-        </CardHeader>
-      </Card>
+      <CategoryHeader />
       <div className="px-4 md:px-0">
         {categories.length === 0 && (
-          <div className="w-full h-32 text-muted-foreground text-sm border rounded-lg border-dashed flex items-center justify-center">
+          <div className="w-full h-32 text-muted-foreground text-sm border  border-dashed flex items-center justify-center">
             No Categories !
           </div>
         )}
@@ -88,7 +96,7 @@ export function CategoryList({ categories }: { categories: CategoryType[] }) {
             return (
               <div
                 key={category.id}
-                className={`group flex w-full items-center justify-between rounded-xl border p-3 text-left transition-all`}
+                className={`group flex w-full items-center justify-between  border p-3 text-left transition-all`}
               >
                 <div
                   onClick={() =>
@@ -96,7 +104,7 @@ export function CategoryList({ categories }: { categories: CategoryType[] }) {
                   }
                   className="flex items-center gap-3 overflow-hidden cursor-pointer"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                  <div className="flex h-10 w-10 items-center justify-center bg-muted">
                     <FolderKanban className="h-5 w-5" />
                   </div>
 

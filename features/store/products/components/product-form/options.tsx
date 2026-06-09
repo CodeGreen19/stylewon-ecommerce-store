@@ -100,25 +100,22 @@ export const Options = withForm({
         </CardHeader>
         <CardContent className="space-y-4">
           {options.length === 0 ? (
-            <div className="flex h-32 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground">
+            <div className="flex h-32 items-center justify-center border border-dashed text-sm text-muted-foreground">
               No options added yet !
             </div>
           ) : (
             options.map((option, optionIndex) => (
               <div
-                key={`${option.name}-${optionIndex}`}
-                className="rounded-md border shadow-xs bg-input/30 p-4"
+                key={`${option.title}-${optionIndex}`}
+                className=" border shadow-xs bg-input/30 p-4"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-medium">{option.name}</h4>
+                      <h4 className="font-medium">{option.title}</h4>
 
-                      <Badge
-                        variant="secondary"
-                        className="capitalize rounded-md"
-                      >
-                        {option.type}
+                      <Badge variant="secondary" className="capitalize ">
+                        {option.valueType}
                       </Badge>
                     </div>
 
@@ -131,7 +128,7 @@ export const Options = withForm({
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="size-8 rounded-lg"
+                      className="size-8 "
                       onClick={() => {
                         setEditOption(option);
                         setOpenDialog(true);
@@ -143,7 +140,7 @@ export const Options = withForm({
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="size-8 rounded-lg text-destructive hover:text-destructive"
+                      className="size-8  text-destructive hover:text-destructive"
                       onClick={() => {
                         form.setFieldValue(
                           "productOptions",
@@ -167,7 +164,7 @@ export const Options = withForm({
                     <Badge
                       key={`${value.label}-${valueIndex}`}
                       variant="outline"
-                      className="flex items-center gap-2 rounded-lg px-3 py-1.5"
+                      className="flex items-center gap-2  px-3 py-1.5"
                     >
                       {value.color && (
                         <ColorPickerPopover
@@ -244,7 +241,7 @@ function ColorPickerPopover({
     <Popover>
       <PopoverTrigger>
         <span
-          className="size-3 inline-block rounded-full border shrink-0"
+          className="size-3 inline-block border shrink-0"
           style={{ backgroundColor: color }}
         />
       </PopoverTrigger>
@@ -271,7 +268,7 @@ const ProductOptionDialog = withForm({
   props: {
     open: false,
     setOpen: () => {},
-    editOption: { name: "", type: "text", values: [] },
+    editOption: { title: "", valueType: "text", values: [] },
     resetEditOption: () => {},
   } as PropTypes,
   render: function Render({
@@ -282,8 +279,8 @@ const ProductOptionDialog = withForm({
     resetEditOption,
   }) {
     const defaultValues: ProductOptionType = editOption ?? {
-      name: "",
-      type: "text",
+      title: "",
+      valueType: "text",
       values: [],
     };
     const manageOnOptions = useStore(
@@ -323,7 +320,7 @@ const ProductOptionDialog = withForm({
           newOptions = [...options, option];
         } else {
           const editIndex = options.findIndex(
-            (o) => o.name.toLowerCase() === editOption.name.toLowerCase(),
+            (o) => o.title.toLowerCase() === editOption.title.toLowerCase(),
           );
 
           newOptions = options.map((o, index) =>
@@ -349,7 +346,7 @@ const ProductOptionDialog = withForm({
       },
     });
 
-    const type = useStore(form.store, (state) => state.values.type);
+    const type = useStore(form.store, (state) => state.values.valueType);
 
     return (
       <Dialog
@@ -387,16 +384,16 @@ const ProductOptionDialog = withForm({
             </DialogHeader>
             <FieldGroup>
               <form.AppField
-                name="name"
+                name="title"
                 children={(field) => (
                   <field.TextField
-                    label="Name"
+                    label="Title"
                     placeHolder="Enter a option name"
                   />
                 )}
               />
               <form.AppField
-                name="type"
+                name="valueType"
                 listeners={{
                   onChange: () => {
                     form.setFieldValue("values", []);
@@ -594,7 +591,7 @@ function MultiSelectInput({ onChange, type, values }: MultiSelectInputProps) {
         </ComboboxValue>
       </ComboboxChips>
 
-      <ComboboxContent anchor={anchor} className="rounded-sm">
+      <ComboboxContent anchor={anchor}>
         <ComboboxEmpty>No items found.</ComboboxEmpty>
 
         <ComboboxList>

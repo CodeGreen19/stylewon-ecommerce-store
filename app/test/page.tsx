@@ -1,12 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import React, { useTransition } from "react";
-import { generateFakeProducts } from "./generate-fake-products";
+import {
+  productSchema,
+  ProductType,
+} from "@/features/store/products/schemas/product.schema";
+import { useTransition } from "react";
+import { generateFakeProduct } from "./generate-fake-products";
 import { addNewProduct } from "@/features/store/products/server/products.action";
-import { toast } from "sonner";
-import { db } from "@/drizzle/db";
-import { products } from "@/drizzle/schema";
 
 export default function page() {
   const [ispending, startTransition] = useTransition();
@@ -16,11 +17,15 @@ export default function page() {
         disabled={ispending}
         onClick={() => {
           startTransition(async () => {
-            const res = generateFakeProducts(100).map((item) =>
-              addNewProduct(item),
+            const inputs: ProductType[] = Array.from({ length: 3 }).map(() =>
+              generateFakeProduct(),
             );
-            await Promise.all(res);
-            toast("worked");
+            console.log(inputs);
+
+            for (const product of inputs) {
+              const res = await addNewProduct(product);
+              console.log(res.message);
+            }
           });
         }}
       >

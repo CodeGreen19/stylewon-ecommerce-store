@@ -18,6 +18,7 @@ import { Pricing } from "./pricing";
 import { SelectImages } from "./select-images";
 import { useRouter } from "next/navigation";
 import { Footer } from "./footer";
+import { showToast } from "@/helpers/func-response";
 
 export function ProductForm({
   type,
@@ -41,16 +42,16 @@ export function ProductForm({
     onSubmit: async ({ value }) => {
       if (type === "CREATE") {
         const res = await addNewProduct(value);
-        toast.success(res.message);
+        showToast(res);
         form.reset();
       }
       if (type === "UPDATE" && existedValues) {
-        const data = await updateProduct({
+        const res = await updateProduct({
           ...value,
           productId: existedValues.productId,
         });
+        showToast(res);
         router.push("/store/products");
-        toast.info(data.message);
       }
     },
   });
@@ -69,15 +70,7 @@ export function ProductForm({
       className="space-y-4 lg:space-y-6"
     >
       <form.AppForm>
-        <Header
-          form={form}
-          title={type === "CREATE" ? "Add new product" : "Update product"}
-          description={
-            type === "CREATE"
-              ? "Add any proudct and it's variants to manage."
-              : "Update any products and it's variants to manage."
-          }
-        />
+        <Header form={form} type={type} />
       </form.AppForm>
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 lg:gap-6">
         <div className="space-y-4 lg:space-y-6">
@@ -92,7 +85,7 @@ export function ProductForm({
         </div>
       </div>
       <form.AppForm>
-        <Footer form={form} />
+        <Footer type={type} form={form} />
       </form.AppForm>
     </form>
   );

@@ -64,7 +64,7 @@ export const SelectImages = withForm({
                   {images.map((src, index) => (
                     <div
                       key={src}
-                      className="group bg-muted relative overflow-hidden rounded-xl border"
+                      className="group bg-muted relative overflow-hidden  border"
                     >
                       <div className="relative aspect-square">
                         <Image

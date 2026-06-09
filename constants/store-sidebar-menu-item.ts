@@ -2,8 +2,11 @@ import {
   BookOpen,
   ChartPie,
   LucideIcon,
+  Server,
+  Settings,
   ShoppingBag,
   Store,
+  UserSearch,
 } from "lucide-react";
 
 export interface SidebarMenuType {
@@ -29,5 +32,20 @@ export const storeSidebarMenu: SidebarMenuType[] = [
     title: "Categories",
     icon: BookOpen,
     url: "/store/categories",
+  },
+  {
+    title: "Orders",
+    icon: Server,
+    url: "/store/orders",
+  },
+  {
+    title: "Users",
+    icon: UserSearch,
+    url: "/store/users",
+  },
+  {
+    title: "Settings",
+    icon: Settings,
+    url: "/store/settings",
   },
 ];

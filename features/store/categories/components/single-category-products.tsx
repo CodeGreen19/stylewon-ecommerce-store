@@ -22,7 +22,7 @@ export function SingleCategoryProducts({
   return (
     <div className="px-4 md:px-0">
       {products.length === 0 && (
-        <div className="w-full h-32 text-muted-foreground text-sm border rounded-lg border-dashed flex items-center justify-center">
+        <div className="w-full h-32 text-muted-foreground text-sm border  border-dashed flex items-center justify-center">
           No Products !
         </div>
       )}
@@ -31,10 +31,10 @@ export function SingleCategoryProducts({
           return (
             <div
               key={item.productId}
-              className={`group flex w-full items-center justify-between rounded-xl border p-3 text-left transition-all`}
+              className={`group flex w-full items-center justify-between  border p-3 text-left transition-all`}
             >
               <div className="flex items-center gap-3 overflow-hidden cursor-pointer">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                <div className="flex h-10 w-10 items-center justify-center  bg-muted">
                   <ShoppingBag className="h-5 w-5" />
                 </div>
 
@@ -68,6 +68,7 @@ function DeleteFromCategory({
   return (
     <Button
       disabled={isPending}
+      variant={"destructive"}
       onClick={() => {
         startTransition(async () => {
           const res = await removeProductFromCategory(productId, categoryId);

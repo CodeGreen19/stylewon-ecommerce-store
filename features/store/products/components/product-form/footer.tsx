@@ -10,9 +10,13 @@ import { productDefaultValues } from "../../schemas/product.schema";
 
 export const Footer = withForm({
   defaultValues: productDefaultValues,
+  props: { type: "CREATE" as "CREATE" | "UPDATE" },
 
-  render: function Render({ form }) {
+  render: function Render({ form, type }) {
     const router = useRouter();
+
+    const submitLabel = type === "CREATE" ? "Submit" : "Update";
+
     return (
       <Card className="p-0 shadow-none md:ring-0 border-none bg-background">
         <CardHeader className=" p-4 md:p-0">
@@ -27,7 +31,7 @@ export const Footer = withForm({
               >
                 Discard <Trash />
               </Button>
-              <form.SubscribeButton />
+              <form.SubscribeButton label={submitLabel} />
             </Field>
           </CardAction>
         </CardHeader>

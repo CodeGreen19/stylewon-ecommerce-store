@@ -1,10 +1,10 @@
-// options
+import { productOptionValueTypes } from "@/constants/products";
 import z from "zod";
 
-const productOptionTypeEnum = z.enum(["text", "color"]);
+// options
 export const productOptionSchema = z.object({
-  name: z.string().trim().min(1).max(100),
-  type: productOptionTypeEnum,
+  title: z.string().trim().min(1).max(100),
+  valueType: z.enum(productOptionValueTypes),
   values: z
     .array(
       z.object({
@@ -41,8 +41,8 @@ export const productSchema = z.object({
 
   basePrice: z.number().min(10).max(100000),
   onSale: z.boolean(),
-  discountInPercent: z.number().max(99).nonnegative(),
   trackInventory: z.boolean(),
+  discountInPercent: z.number().max(99).nonnegative(),
 
   manageOnOptions: z.boolean(),
   productVariants: z.array(productVariantSchema),

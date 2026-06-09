@@ -65,7 +65,7 @@ export function ProductDetails({
       {product.productOptions.length > 0 && <Separator />}
       {product.productOptions.map((opt) => (
         <div key={opt.id} className="space-y-4">
-          <h3>{opt.name}</h3>
+          <h3>{opt.title}</h3>
           <div className="space-x-2">
             {opt.values.map((v) => {
               let variant: "default" | "secondary";

@@ -112,7 +112,7 @@ export const Pricing = withForm({
             {!manageOnOptions && (
               <div className="flex flex-col gap-4 md:flex-row">
                 {isOnSale && (
-                  <div className="rounded-md border bg-muted p-4 space-y-1 flex-1">
+                  <div className=" border bg-muted p-4 space-y-1 flex-1">
                     <p className="text-sm text-muted-foreground">
                       Selling Price
                     </p>
@@ -130,7 +130,7 @@ export const Pricing = withForm({
                   </div>
                 )}
 
-                <div className="rounded-md border bg-muted p-4 space-y-1 flex-1">
+                <div className=" border bg-muted p-4 space-y-1 flex-1">
                   <p className="text-sm text-muted-foreground">
                     Estimated Profit
                   </p>
@@ -140,7 +140,7 @@ export const Pricing = withForm({
                   </h3>
                 </div>
 
-                <div className="rounded-md border bg-muted p-4 space-y-1 flex-1">
+                <div className=" border bg-muted p-4 space-y-1 flex-1">
                   <p className="text-sm text-muted-foreground">Profit Margin</p>
 
                   <h3 className="text-2xl font-semibold">{margin}%</h3>

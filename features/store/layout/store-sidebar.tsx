@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/sidebar";
 import { storeSidebarMenu } from "@/constants/store-sidebar-menu-item";
 import { cn } from "@/lib/utils";
-import { CloudSun, LayoutDashboard } from "lucide-react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ComponentProps, Suspense } from "react";
@@ -27,10 +25,10 @@ export function StoreSidebar(props: ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="h-14 pl-4 text-2xl font-black flex items-start justify-end">
-        {isCollapsed ? "S" : "Stylewon"}
+      <SidebarHeader className="text-2xl uppercase font-bold tracking-tight pl-4 h-14  flex items-start justify-center">
+        {isCollapsed ? "S" : "Store"}
       </SidebarHeader>
-      <SidebarContent className="p-2 group-data-[state=collapsed]:p-0">
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarMenu>
@@ -40,9 +38,9 @@ export function StoreSidebar(props: ComponentProps<typeof Sidebar>) {
                   tooltip={item.title}
                   render={<Link href={item.url} />}
                   className={cn(
-                    "px-4 py-5 text-muted-foreground hover:bg-secondary",
+                    " text-muted-foreground hover:bg-transparent hover:text-foreground",
                     pathname.startsWith(item.url)
-                      ? "bg-primary text-black hover:bg-primary hover:text-black active:bg-primary active:text-black"
+                      ? "bg-secondary text-foreground hover:bg-secondary hover:text-foreground active:bg-secondary active:text-foreground"
                       : "",
                   )}
                 >
@@ -61,23 +59,5 @@ export function StoreSidebar(props: ComponentProps<typeof Sidebar>) {
         </Suspense>
       </SidebarFooter>
     </Sidebar>
-  );
-}
-
-function ToggleMode() {
-  const { setTheme, theme } = useTheme();
-
-  return (
-    <div>
-      <CloudSun
-        onClick={() => {
-          if (theme && theme === "light") {
-            setTheme("dark");
-          } else {
-            setTheme("light");
-          }
-        }}
-      />
-    </div>
   );
 }

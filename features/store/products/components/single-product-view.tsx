@@ -29,7 +29,14 @@ import {
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-import { Boxes, DollarSign, Package, Weight, Warehouse } from "lucide-react";
+import {
+  Boxes,
+  DollarSign,
+  Package,
+  Weight,
+  Warehouse,
+  Edit,
+} from "lucide-react";
 import { getSingleProduct } from "../server/products.action";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -56,12 +63,29 @@ export function SingleProductView({ product }: { product: Product }) {
   return (
     <div className="max-w-7xl m-auto space-y-6">
       {/* Header */}
-
+      <Card className="p-0 md:ring-0 bg-background">
+        <CardHeader className="p-4 md:p-0">
+          <CardTitle className="text-2xl font-bold truncate">
+            {product.name}
+          </CardTitle>
+          <CardDescription>
+            single product description is here..
+          </CardDescription>
+          <CardAction>
+            <Button
+              nativeButton={false}
+              render={<Link href={`/store/products/${product.id}/update`} />}
+            >
+              Update
+            </Button>
+          </CardAction>
+        </CardHeader>
+      </Card>
       <Card>
         <CardHeader>
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-2">
-              <CardTitle className="text-3xl">{product.name}</CardTitle>
+              <CardTitle></CardTitle>
 
               <CardDescription
                 dangerouslySetInnerHTML={{
@@ -86,14 +110,6 @@ export function SingleProductView({ product }: { product: Product }) {
               )}
             </div>
           </div>
-          <CardAction>
-            <Button
-              nativeButton={false}
-              render={<Link href={`/store/products/${product.id}/update`} />}
-            >
-              Update
-            </Button>
-          </CardAction>
         </CardHeader>
       </Card>
 
@@ -111,7 +127,7 @@ export function SingleProductView({ product }: { product: Product }) {
                     src={selectedImage}
                     alt={product.name}
                     fill
-                    className="rounded-lg object-cover"
+                    className="object-cover"
                   />
                 </AspectRatio>
 
@@ -123,7 +139,7 @@ export function SingleProductView({ product }: { product: Product }) {
                           src={image}
                           alt="product-img"
                           fill
-                          className={`rounded-md border object-cover ${
+                          className={` border object-cover ${
                             image === selectedImage ? "ring-2 ring-primary" : ""
                           }`}
                         />
@@ -134,7 +150,7 @@ export function SingleProductView({ product }: { product: Product }) {
               </div>
             ) : (
               <AspectRatio ratio={1}>
-                <div className="flex h-full items-center justify-center rounded-lg border border-dashed">
+                <div className="flex h-full items-center justify-center  border border-dashed">
                   No Images
                 </div>
               </AspectRatio>
@@ -154,7 +170,7 @@ export function SingleProductView({ product }: { product: Product }) {
 
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-lg border p-4">
+                <div className=" border p-4">
                   <div className="flex items-center gap-2">
                     <DollarSign className="size-4" />
 
@@ -168,7 +184,7 @@ export function SingleProductView({ product }: { product: Product }) {
                   </p>
                 </div>
 
-                <div className="rounded-lg border p-4">
+                <div className=" border p-4">
                   <div className="flex items-center gap-2">
                     <Package className="size-4" />
 
@@ -194,7 +210,7 @@ export function SingleProductView({ product }: { product: Product }) {
 
             <CardContent>
               <div className="grid gap-4 md:grid-cols-3">
-                <div className="rounded-lg border p-4">
+                <div className=" border p-4">
                   <Boxes className="mb-2 size-5" />
 
                   <p className="text-sm text-muted-foreground">Variants</p>
@@ -204,7 +220,7 @@ export function SingleProductView({ product }: { product: Product }) {
                   </p>
                 </div>
 
-                <div className="rounded-lg border p-4">
+                <div className=" border p-4">
                   <Warehouse className="mb-2 size-5" />
 
                   <p className="text-sm text-muted-foreground">Total Stock</p>
@@ -212,7 +228,7 @@ export function SingleProductView({ product }: { product: Product }) {
                   <p className="text-2xl font-bold">{totalStock}</p>
                 </div>
 
-                <div className="rounded-lg border p-4">
+                <div className=" border p-4">
                   <DollarSign className="mb-2 size-5" />
 
                   <p className="text-sm text-muted-foreground">
@@ -239,7 +255,7 @@ export function SingleProductView({ product }: { product: Product }) {
                 <div className="space-y-5">
                   {product.productOptions.map((option) => (
                     <div key={option.id}>
-                      <h4 className="font-medium">{option.name}</h4>
+                      <h4 className="font-medium">{option.title}</h4>
 
                       <div className="mt-2 flex flex-wrap gap-2">
                         {option.values.map((value) => (

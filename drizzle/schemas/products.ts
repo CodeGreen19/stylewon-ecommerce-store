@@ -11,6 +11,7 @@ import { createdAt, id, updatedAt } from "../helpers";
 import { relations } from "drizzle-orm";
 import { productsToCategories } from "./categories";
 import { cartItems } from "./carts";
+import { productOptionValueTypes } from "@/constants/products";
 
 export const products = pgTable("products", {
   id,
@@ -52,8 +53,7 @@ export const productVariants = pgTable("product_variants", {
   updatedAt,
 });
 
-export const type = ["text", "color"] as const;
-export const typeEnum = pgEnum("type", type);
+export const typeEnum = pgEnum("value_type", productOptionValueTypes);
 
 export const productOptions = pgTable("product_options", {
   id,
@@ -62,10 +62,10 @@ export const productOptions = pgTable("product_options", {
     .references(() => products.id, {
       onDelete: "cascade",
     }),
-  name: varchar("name", {
+  title: varchar("title", {
     length: 100,
   }).notNull(),
-  type: typeEnum().notNull(),
+  valueType: typeEnum().notNull(),
   createdAt,
   updatedAt,
 });
@@ -123,67 +123,3 @@ export const productOptionValuesRelations = relations(
     }),
   }),
 );
-
-// export const productOptionTypeEnum = pgEnum("product_option_type", [
-//   "text",
-//   "color",
-// ]);
-
-// export const inventoryStatusEnum = pgEnum("inventory_status", [
-//   "in_stock",
-//   "out_of_stock",
-//   "backorder",
-// ]);
-
-// export const productVariants = pgTable("product_variants", {
-//   id,
-//   productId: uuid("product_id")
-//     .notNull()
-//     .references(() => products.id, {
-//       onDelete: "cascade",
-//     }),
-
-//   title: varchar("title", {
-//     length: 200,
-//   }).notNull(),
-
-//   sku: varchar("sku", {
-//     length: 100,
-//   })
-//     .notNull()
-//     .unique(),
-
-//   barcode: varchar("barcode", {
-//     length: 100,
-//   }),
-
-//   price: integer("price"),
-//   costOfGood: integer("cost_of_good"),
-//   shippingWeight: integer("shipping_weight"),
-
-//   inventoryQuantity: integer("inventory_quantity").notNull().default(0),
-
-//   inventoryStatus: inventoryStatusEnum("inventory_status")
-//     .notNull()
-//     .default("in_stock"),
-
-//   trackInventory: boolean("track_inventory"),
-//   createdAt,
-//   updatedAt,
-// });
-
-// export const productsRelations = relations(products, ({ many }) => ({
-//   options: many(productOptions),
-// }));
-
-// export const productOptionsRelations = relations(
-//   productOptions,
-//   ({ one, many }) => ({
-//     product: one(products, {
-//       fields: [productOptions.productId],
-//       references: [products.id],
-//     }),
-
-//     values: many(productOptionValues),
-//   }),
-// );

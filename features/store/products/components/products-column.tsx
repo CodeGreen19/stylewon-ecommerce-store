@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef, Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { getAllProducts } from "../server/products.query";
 
@@ -24,6 +24,7 @@ import { DeleteProductDialog } from "./delete-product-dialog";
 export type ProductColumnType = Awaited<
   ReturnType<typeof getAllProducts>
 >[number];
+
 export const productsColumn: ColumnDef<ProductColumnType>[] = [
   {
     id: "select",
@@ -48,14 +49,25 @@ export const productsColumn: ColumnDef<ProductColumnType>[] = [
 
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          className={"pl-0"}
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start gap-2">
           <Image
             height={40}
             width={40}
-            className="rounded-lg object-cover size-10"
+            className=" object-cover size-10"
             src={
               (row.original.images && row.original.images[0]) ||
               "/images/dummy-img.jpg"
@@ -78,18 +90,44 @@ export const productsColumn: ColumnDef<ProductColumnType>[] = [
     },
   },
   {
-    header: "Price",
+    accessorKey: "basePrice",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className={"pl-0"}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Price
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       return <div>{row.original.basePrice}</div>;
     },
   },
   {
-    header: "Stock",
-    cell: ({ row }) => {
-      const stock = row.original.productVariants.reduce(
-        (prev, curr) => prev + curr.stock,
-        0,
+    id: "stock",
+    // 1. Calculate stock totals so TanStack knows how to evaluate numeric values
+    accessorFn: (row) =>
+      row.productVariants.reduce((prev, curr) => prev + curr.stock, 0),
+    // 2. Wrap the header with your layout sorting button
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className={"pl-0"}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Stock
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       );
+    },
+    // 3. Render the markup using the pre-calculated value from step 1
+    cell: ({ getValue, row }) => {
+      const stock = getValue<number>();
       const trackInventory = row.original.trackInventory;
       return (
         <div>

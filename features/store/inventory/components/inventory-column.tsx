@@ -3,9 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef, Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,6 +20,7 @@ import { getAllInventory } from "../server/inventory.query";
 export type InventoryColumnType = Awaited<
   ReturnType<typeof getAllInventory>
 >[number];
+
 export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
   {
     id: "select",
@@ -42,9 +42,20 @@ export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-
   {
-    header: "Name",
+    accessorKey: "product.name", // Added accessorKey so TanStack Table knows how to sort this column
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="pl-0"
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start gap-2">
@@ -67,7 +78,24 @@ export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
     },
   },
   {
-    header: "Price",
+    id: "price", // Explicit ID for columns using custom sorting logic
+    accessorFn: (row) => {
+      // Added accessorFn so TanStack Table can calculate and sort by the final calculated price
+      const { basePrice, discountInPercent } = row.product;
+      return basePrice * (1 - discountInPercent / 100) + row.priceDiff;
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="pl-0"
+        >
+          Price
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const { basePrice, discountInPercent } = row.original.product;
       return (
@@ -79,10 +107,33 @@ export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
   },
   {
     accessorKey: "sku",
-    header: "SKU",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="pl-0"
+        >
+          SKU
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
-    header: "Stock",
+    accessorKey: "stock", // Added accessorKey to make the stock numeric value sortable
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="pl-0"
+        >
+          Stock
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const stock = row.original.stock;
       const trackInventory = row.original.product.trackInventory;

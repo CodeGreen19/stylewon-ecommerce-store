@@ -7,7 +7,7 @@ import "./globals.css";
 import Script from "next/script";
 import { TanstackQueryProvider } from "@/lib/tanstack-query-provider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +39,7 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable,
         "font-sans",
-        inter.variable,
+        figtree.variable,
       )}
     >
       <head>
@@ -55,7 +55,7 @@ export default function RootLayout({
         <Toaster
           closeButton
           toastOptions={{
-            style: { boxShadow: "none" },
+            style: { boxShadow: "none", borderRadius: "0px" },
           }}
         />
       </body>

@@ -9,14 +9,13 @@ import {
 } from "@/drizzle/schema";
 import { updateTag } from "next/cache";
 import { eq } from "drizzle-orm";
+import { errorResponse, successResponse } from "@/helpers/func-response";
 
 export async function addNewProduct(inputs: ProductType) {
-  // const { data, success } = productSchema.safeParse(inputs);
-  // if (!success) {
-  //   return { message: "Invalid inputs" };
-  // }
-
-  const data = inputs;
+  const { data, success } = productSchema.safeParse(inputs);
+  if (!success) {
+    return errorResponse("Invalid inputs");
+  }
   // add product
   const [product] = await db.insert(products).values(data).returning();
 
@@ -45,7 +44,7 @@ export async function addNewProduct(inputs: ProductType) {
   // update cache
   updateTag("products");
   updateTag("inventory");
-  return { message: "New product added" };
+  return successResponse("New product added");
 }
 
 export async function updateProduct(
@@ -53,7 +52,7 @@ export async function updateProduct(
 ) {
   const { data, success } = productSchema.safeParse(inputs);
   if (!success) {
-    return { message: "Invalid inputs" };
+    return errorResponse("Invalid inputs");
   }
 
   await db.update(products).set(data).where(eq(products.id, inputs.productId));
@@ -92,7 +91,7 @@ export async function updateProduct(
   // update cache
   updateTag("products");
   updateTag("inventory");
-  return { message: "Updated" };
+  return successResponse("Updated");
 }
 
 export async function deleteSingleProduct(productId: string) {
@@ -100,7 +99,7 @@ export async function deleteSingleProduct(productId: string) {
 
   updateTag("products");
   updateTag("inventory");
-  return { message: "Deleted" };
+  return successResponse("Deleted");
 }
 
 export async function getSingleProduct(productId: string) {

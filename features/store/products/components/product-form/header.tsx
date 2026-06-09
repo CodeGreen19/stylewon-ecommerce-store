@@ -16,11 +16,19 @@ import { productDefaultValues } from "../../schemas/product.schema";
 
 export const Header = withForm({
   defaultValues: productDefaultValues,
-  props: { title: "", description: "" },
-  render: function Render({ form, title, description }) {
+  props: { type: "CREATE" as "CREATE" | "UPDATE" },
+  render: function Render({ form, type }) {
     const router = useRouter();
+
+    const title = type === "CREATE" ? "Add new product" : "Update product";
+    const description =
+      type === "CREATE"
+        ? "Add any proudct and it's variants to manage."
+        : "Update any products and it's variants to manage.";
+    const submitLabel = type === "CREATE" ? "Submit" : "Update";
+
     return (
-      <Card className="p-0 shadow-none md:ring-0 bg-background">
+      <Card className="p-0 md:ring-0 bg-background">
         <CardHeader className="p-4 md:p-0">
           <CardTitle className="text-2xl font-bold truncate">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -35,7 +43,7 @@ export const Header = withForm({
               >
                 <span className="hidden md:inline">Discard</span> <Trash />
               </Button>
-              <form.SubscribeButton />
+              <form.SubscribeButton label={submitLabel} />
             </Field>
           </CardAction>
         </CardHeader>

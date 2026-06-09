@@ -75,7 +75,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class: cn(
-          "min-h-[180px] w-full rounded-b-md px-4 py-3 outline-none",
+          "min-h-[180px] w-full px-4 py-3 outline-none",
           "prose prose-sm dark:prose-invert max-w-none",
           editorClassName,
         ),
@@ -120,7 +120,7 @@ export function RichTextEditor({
 
   if (!editor) {
     return (
-      <div className="border rounded-md">
+      <div className="border">
         <div className="border-b h-12 w-full bg-input/30"></div>
         <div className="w-full min-h-45 bg-input/30 "></div>
       </div>
@@ -128,9 +128,7 @@ export function RichTextEditor({
   }
 
   return (
-    <div
-      className={cn("overflow-hidden rounded-md border bg-input/30", className)}
-    >
+    <div className={cn("overflow-hidden  border bg-input/30", className)}>
       {/* Toolbar */}
       <div className="flex items-center gap-2 border-b p-2">
         <ToolbarButton
