@@ -83,7 +83,7 @@ export function AccountLayout(props: LayoutProps<"/account">) {
                         {item.link && (
                           <SidebarMenuButton
                             render={
-                              <Link href={item.link}>
+                              <Link href={item.label}>
                                 <item.icon />
                                 <span>{item.label}</span>
                               </Link>
@@ -95,6 +95,7 @@ export function AccountLayout(props: LayoutProps<"/account">) {
                           <SidebarMenuButton
                             render={
                               <Button
+                                key={item.label}
                                 onClick={() => {
                                   if (item.label === "Signout") {
                                     authClient.signOut({

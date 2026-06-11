@@ -13,7 +13,7 @@ export function NewArrivalsSection() {
 }
 
 async function NewArrivalsSectionListing() {
-  const res = await getProductsByCategoryName("New arrivals");
+  const res = await getProductsByCategoryName("Shirts");
 
   return (
     <section className=" py-16">

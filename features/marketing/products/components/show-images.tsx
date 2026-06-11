@@ -9,14 +9,14 @@ export function ShowImages({ images }: { images: string[] }) {
   );
 
   return (
-    <div className="flex flex-col gap-4 md:flex-row-reverse md:items-start md:justify-end max-w-2xl">
-      <div className="overflow-hidden rounded-lg border flex items-center justify-center p-2">
+    <div className="flex flex-col gap-4 md:flex-row-reverse md:items-start md:justify-end max-w-2xl md:pr-10">
+      <div className="overflow-hidden  border flex items-center justify-center bg-secondary w-full">
         <Image
           src={selectedImage}
           height={400}
           width={400}
           alt="Selected product image"
-          className="object-contain h-auto max-w-full aspect-square"
+          className="object-contain h-auto w-full aspect-square"
         />
       </div>
 
@@ -25,7 +25,7 @@ export function ShowImages({ images }: { images: string[] }) {
           <div
             key={i}
             onClick={() => setSelectedImage(img)}
-            className={`relative shrink-0 overflow-hidden rounded-md border transition-all duration-200 p-1 bg-white
+            className={`relative shrink-0 overflow-hidden border transition-all duration-200  bg-white
               ${selectedImage === img ? "border-black scale-95" : "border-gray-200 hover:border-gray-400"}`}
           >
             <Image
@@ -33,7 +33,7 @@ export function ShowImages({ images }: { images: string[] }) {
               height={48}
               width={48}
               alt="Product thumbnail"
-              className="object-cover rounded aspect-square"
+              className="object-cover aspect-square"
             />
           </div>
         ))}

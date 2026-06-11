@@ -135,3 +135,19 @@ export async function getCart() {
 
   return { cart };
 }
+export async function getCartCount() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    throw new Error("user not exist");
+  }
+
+  const cart = await db.query.carts.findFirst({
+    where: eq(carts.userId, session.user.id),
+    with: { cartItems: true },
+  });
+
+  return { count: cart?.cartItems.length || 0 };
+}

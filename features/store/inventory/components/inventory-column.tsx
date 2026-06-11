@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { getAllInventory } from "../server/inventory.query";
+import { calculatePrice } from "@/helpers/caculations";
 
 export type InventoryColumnType = Awaited<
   ReturnType<typeof getAllInventory>
@@ -100,7 +101,7 @@ export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
       const { basePrice, discountInPercent } = row.original.product;
       return (
         <div>
-          {basePrice * (1 - discountInPercent / 100) + row.original.priceDiff}
+          {calculatePrice(basePrice, discountInPercent, row.original.priceDiff)}
         </div>
       );
     },

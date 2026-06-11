@@ -11,10 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
-import { CreditCard, LoaderIcon, LogOut, Settings, User } from "lucide-react";
+import { CreditCard, LogOut, Settings, User, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { toast } from "sonner";
 
 interface UserButtonProps {
@@ -22,17 +22,14 @@ interface UserButtonProps {
   type: "MOBILE" | "DESKTOP";
 }
 
-export function UserButtonWrapper({ children, type }: UserButtonProps) {
+export function UserButton({ children, type }: UserButtonProps) {
   const router = useRouter();
   const { data, isPending } = authClient.useSession();
-  const [user, setUser] = useState<{ name: string; email: string } | null>(
-    null,
-  );
 
   if (isPending) {
     return (
-      <Button size={"icon"} variant={"ghost"} className={"animate-spin"}>
-        <LoaderIcon />
+      <Button size={"icon"} variant={"ghost"} className={"animate-pulse"}>
+        <UserIcon className="size-5" />
       </Button>
     );
   }
@@ -51,7 +48,7 @@ export function UserButtonWrapper({ children, type }: UserButtonProps) {
   if (data && type === "MOBILE") {
     return (
       <Button
-        size={"icon"}
+        size={"icon-lg"}
         variant={"ghost"}
         onClick={() => router.push("/account")}
       >

@@ -1,20 +1,21 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const orders = [
-  {
-    id: "#ORD-1001",
-    total: "$120",
-    status: "Delivered",
-  },
-  {
-    id: "#ORD-1002",
-    total: "$75",
-    status: "Processing",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { getOrders } from "../server/order.action";
 
 export function AccountOrdersPage() {
+  const { isPending, error, data } = useQuery({
+    queryKey: ["orders"],
+    queryFn: () => getOrders(),
+  });
+  if (isPending) {
+    return <div>Pending...</div>;
+  }
+  if (error) {
+    return <div> Error occurs</div>;
+  }
   return (
     <section className="space-y-6">
       <div>
@@ -26,7 +27,8 @@ export function AccountOrdersPage() {
       </div>
 
       <div className="space-y-4">
-        {orders.map((order) => (
+        {data.orders.length === 0 && <div>No Orders</div>}
+        {data.orders.map((order) => (
           <Card key={order.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle className="text-base">{order.id}</CardTitle>

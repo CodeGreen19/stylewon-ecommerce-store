@@ -20,11 +20,3 @@ export async function getProductsByCategoryName(categoryName: string) {
     with: { product: true },
   });
 }
-
-export async function getSingleProductById(productId: string) {
-  const [product] = await db.query.products.findMany({
-    where: eq(products.id, productId),
-    with: { productOptions: { with: { values: true } }, productVariants: true },
-  });
-  return product;
-}

@@ -4,12 +4,7 @@ import Link from "next/link";
 export function Logo() {
   return (
     <Link href={"/"}>
-      <Image
-        height={30}
-        width={130}
-        src={"/logo/stylewon-logo.png"}
-        alt="logo"
-      />
+      <h1 className="text-4xl font-black uppercase">Stylewon</h1>
     </Link>
   );
 }

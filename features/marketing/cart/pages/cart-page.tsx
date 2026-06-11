@@ -38,7 +38,7 @@ export function CartPage() {
     0,
   );
   return (
-    <div className=" max-w-7xl py-10 m-auto">
+    <div className=" max-w-7xl m-auto">
       <CartHeader />
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_350px]">
@@ -52,7 +52,7 @@ export function CartPage() {
 
 export function CartHeader() {
   return (
-    <div>
+    <div className="py-3 px-4 md:px-0">
       <h1 className="text-3xl font-semibold">Shopping Cart</h1>
 
       <p className="text-muted-foreground mt-2">
@@ -91,27 +91,27 @@ export function CartItem({
   const subTotal =
     (item.variant.product.basePrice + item.variant.priceDiff) * item.qty;
   return (
-    <Card className="p-4">
+    <Card>
       <CardHeader>
         <CardTitle>{item.variant.product.name}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex gap-4">
-          <div className=" rounded-lg overflow-hidden">
+          <div className=" overflow-hidden">
             <Image height={100} width={100} alt="cart-img" src={imageUrl} />
           </div>
+          <div className="flex-1 ">
+            <div>
+              <p className="text-muted-foreground text-sm"></p>
 
-          <div className="flex-1">
-            <p className="text-muted-foreground text-sm"></p>
+              <div className="mt-4 flex items-center justify-between">
+                <QuantitySelector item={item} />
 
-            <div className="mt-4 flex items-center justify-between">
-              <QuantitySelector item={item} />
-
-              <RemoveCartItem cartItemId={item.id} />
+                <RemoveCartItem cartItemId={item.id} />
+              </div>
             </div>
+            <div className="text-lg pt-2 ">&#2547;{subTotal}</div>
           </div>
-
-          <div className="font-medium">&#2547;{subTotal}</div>
         </div>
       </CardContent>
     </Card>
@@ -150,7 +150,7 @@ export function QuantitySelector({
         <Minus />
       </Button>
 
-      <div className="w-8 text-center">
+      <div className="w-8 text-center ">
         {pending ? (
           <Loader2 className="size-4 animate-spin mx-auto" />
         ) : (
@@ -192,11 +192,11 @@ export function RemoveCartItem({ cartItemId }: { cartItemId: string }) {
 
 export function CartSummary({ total }: { total: number }) {
   return (
-    <Card className="h-fit p-6 sticky top-6">
-      <h2 className="font-semibold">Order Summary</h2>
+    <Card className="h-fit p-4 sticky top-6">
+      <h2 className="font-semibold">Cart Summary</h2>
 
       <div className="mt-6 flex justify-between">
-        <span>Total</span>
+        <span>Total Amount</span>
 
         <span className="font-semibold">${total.toFixed(2)}</span>
       </div>
@@ -206,7 +206,7 @@ export function CartSummary({ total }: { total: number }) {
         className="mt-6 w-full"
         render={<Link href={"/checkout"}></Link>}
       >
-        Checkout
+        Procced
       </Button>
     </Card>
   );

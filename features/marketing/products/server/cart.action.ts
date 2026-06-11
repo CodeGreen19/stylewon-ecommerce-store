@@ -1,31 +1,13 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { cartItems, carts, products, productVariants } from "@/drizzle/schema";
+import { cartItems, carts, productVariants } from "@/drizzle/schema";
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
 import { and, eq } from "drizzle-orm";
-
-export async function fetchProducts({ pageParam = 0 }) {
-  const LIMIT = 20;
-
-  const [productsData, totalResult] = await Promise.all([
-    db.select().from(products).limit(LIMIT).offset(pageParam),
-    db.select({ count: products.id }).from(products),
-  ]);
-
-  const total = totalResult.length;
-
-  // 2. Determine if a next page exists
-  const hasMore = pageParam + LIMIT < total;
-
-  return {
-    products: productsData,
-    nextCursor: hasMore ? pageParam + LIMIT : null,
-  };
-}
+import { errorResponse, successResponse } from "@/helpers/func-response";
 
 export async function addToCart({
   qty,
@@ -39,9 +21,7 @@ export async function addToCart({
   });
 
   if (!session) {
-    return {
-      message: "Signin is required",
-    };
+    return errorResponse("Signin is required");
   }
 
   const [variant] = await db
@@ -50,15 +30,11 @@ export async function addToCart({
     .where(eq(productVariants.id, variantId));
 
   if (!variant) {
-    return {
-      message: "Variant not found",
-    };
+    return errorResponse("Variant not found");
   }
 
   if (variant.stock <= 0) {
-    return {
-      message: "Out of stock",
-    };
+    return errorResponse("Out of stock");
   }
 
   let [cart] = await db
@@ -91,9 +67,7 @@ export async function addToCart({
     const newQty = existingItem.qty + qty;
 
     if (newQty > variant.stock) {
-      return {
-        message: `Only ${variant.stock} items available`,
-      };
+      return errorResponse(`Only ${variant.stock} items available`);
     }
 
     await db
@@ -103,19 +77,14 @@ export async function addToCart({
       })
       .where(eq(cartItems.id, existingItem.id));
 
-    return {
-      message: "Cart updated",
-    };
+    return successResponse("Cart updated");
   }
 
   // -------------------------
   // New Item
   // -------------------------
   if (qty > variant.stock) {
-    return {
-      success: false,
-      message: `Only ${variant.stock} items available`,
-    };
+    return errorResponse(`Only ${variant.stock} items available`);
   }
 
   await db.insert(cartItems).values({
@@ -124,7 +93,5 @@ export async function addToCart({
     qty,
   });
 
-  return {
-    message: "Added to cart",
-  };
+  return successResponse("Added to cart");
 }

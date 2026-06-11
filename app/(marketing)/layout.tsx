@@ -1,4 +1,4 @@
-import { MarketingLayout } from "@/features/marketing/layout/marketing-layout";
+import { MarketingLayout } from "@/features/marketing/layout";
 import { ThemeProvider } from "@/lib/theme-provider";
 
 export default function layout(props: LayoutProps<"/">) {

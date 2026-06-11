@@ -1,5 +1,6 @@
+import { OrdersPage } from "@/features/store/orders/pages/orders-page";
 import React from "react";
 
 export default function page() {
-  return <div>orders page</div>;
+  return <OrdersPage />;
 }

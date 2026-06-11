@@ -7,11 +7,11 @@ import { TopSellingsSection } from "../components/top-sellings";
 export function HomePage() {
   return (
     <main>
-      <HeroSection />
-      <NewArrivalsSection />
+      {/* <HeroSection />
       <TopSellingsSection />
       <GridCategorySection />
-      <HappyCustomers />
+      <HappyCustomers /> */}
+      <NewArrivalsSection />
     </main>
   );
 }

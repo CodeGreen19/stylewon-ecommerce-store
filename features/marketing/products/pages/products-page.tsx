@@ -1,10 +1,10 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchProducts } from "../server/products.server";
 import { ProductCard } from "../../shared/components/product-card";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { fetchProducts } from "../server/products.action";
 
 export function ProductsPage() {
   return (
