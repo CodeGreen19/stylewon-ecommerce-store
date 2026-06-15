@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
-import { CreditCard, LogOut, Settings, User, UserIcon } from "lucide-react";
+import { CreditCard, LogOut, MapPinHouse, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
@@ -19,54 +18,67 @@ import { toast } from "sonner";
 
 interface UserButtonProps {
   children: ReactNode;
-  type: "MOBILE" | "DESKTOP";
 }
 
-export function UserButton({ children, type }: UserButtonProps) {
+export function UserButton({ children }: UserButtonProps) {
   const router = useRouter();
   const { data, isPending } = authClient.useSession();
 
   if (isPending) {
+    return <span className="animate-pulse">{children}</span>;
+  }
+  if (!data) {
     return (
-      <Button size={"icon"} variant={"ghost"} className={"animate-pulse"}>
-        <UserIcon className="size-5" />
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          nativeButton={false}
+          render={<span>{children}</span>}
+        />
+
+        <DropdownMenuContent className="w-56" align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                render={
+                  <Link
+                    href="/signup"
+                    className="w-full flex items-center cursor-pointer"
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Sign up</span>
+                  </Link>
+                }
+              />
+
+              <DropdownMenuItem
+                render={
+                  <Link
+                    href="/signin"
+                    className="w-full flex items-center cursor-pointer"
+                  >
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    <span>Sign in</span>
+                  </Link>
+                }
+              />
+            </DropdownMenuGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }
 
-  if (!data) {
-    return (
-      <Button
-        size={"icon"}
-        variant={"ghost"}
-        onClick={() => router.push("/signin")}
-      >
-        {children}
-      </Button>
-    );
-  }
-  if (data && type === "MOBILE") {
-    return (
-      <Button
-        size={"icon-lg"}
-        variant={"ghost"}
-        onClick={() => router.push("/account")}
-      >
-        {children}
-      </Button>
-    );
-  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={
-          <Button size={"icon"} variant={"ghost"}>
-            {children}
-          </Button>
-        }
+        nativeButton={false}
+        render={<span>{children}</span>}
       />
 
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent className="w-56 " align="end">
         <DropdownMenuGroup>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -87,23 +99,22 @@ export function UserButton({ children, type }: UserButtonProps) {
             <DropdownMenuItem
               render={
                 <Link
-                  href="/account/billing"
+                  href="/account/orders"
                   className="w-full flex items-center cursor-pointer"
                 >
                   <CreditCard className="mr-2 h-4 w-4" />
-                  <span>Billing</span>
+                  <span>Orders</span>
                 </Link>
               }
             />
-
             <DropdownMenuItem
               render={
                 <Link
-                  href="/account/settings"
+                  href="/account/address"
                   className="w-full flex items-center cursor-pointer"
                 >
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
+                  <MapPinHouse className="mr-2 h-4 w-4" />
+                  <span>Address</span>
                 </Link>
               }
             />

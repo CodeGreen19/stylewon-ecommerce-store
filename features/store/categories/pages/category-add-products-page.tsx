@@ -2,12 +2,13 @@ import { Suspense } from "react";
 import { SingleCategoryHeader } from "../components/single-category-header";
 import { getProductsByCategory } from "../server/single.category.action";
 import { SingleCategoryProducts } from "../components/single-category-products";
+import SingleCategoryProductsSkeleton from "../components/single-category-products-skeleton";
 
 export function CategoryAddProductsPage(
   props: PageProps<"/store/categories/[id]/add-products">,
 ) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<SingleCategoryProductsSkeleton />}>
       <CategoryAddProducts {...props} />
     </Suspense>
   );

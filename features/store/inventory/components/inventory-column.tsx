@@ -1,10 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ColumnDef, Row } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,49 +10,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { getAllInventory } from "../server/inventory.query";
 import { calculatePrice } from "@/helpers/caculations";
+import { ColumnDef, Row } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  createSelectionColumn,
+  ShortableHeaderButton,
+} from "../../shared/components/shared-column";
+import { getAllInventory } from "../server/inventory.query";
 
 export type InventoryColumnType = Awaited<
   ReturnType<typeof getAllInventory>
 >[number];
 
 export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
+  createSelectionColumn<InventoryColumnType>(),
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        indeterminate={table.getIsSomePageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "product.name", // Added accessorKey so TanStack Table knows how to sort this column
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="pl-0"
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "product.name",
+    header: (ctx) => <ShortableHeaderButton context={ctx} title="Name" />,
+
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start gap-2">
@@ -70,8 +44,8 @@ export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
             }
             alt={"product img"}
           />
-          <div className="truncate">
-            <div>{row.original.product.name}</div>
+          <div>
+            <div className="truncate">{row.original.product.name}</div>
             <div className="text-muted-foreground">{row.original.label}</div>
           </div>
         </div>
@@ -79,24 +53,13 @@ export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
     },
   },
   {
-    id: "price", // Explicit ID for columns using custom sorting logic
+    id: "price",
     accessorFn: (row) => {
-      // Added accessorFn so TanStack Table can calculate and sort by the final calculated price
       const { basePrice, discountInPercent } = row.product;
       return basePrice * (1 - discountInPercent / 100) + row.priceDiff;
     },
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="pl-0"
-        >
-          Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: (ctx) => <ShortableHeaderButton context={ctx} title="Price" />,
+
     cell: ({ row }) => {
       const { basePrice, discountInPercent } = row.original.product;
       return (
@@ -108,33 +71,12 @@ export const inventoryColumn: ColumnDef<InventoryColumnType>[] = [
   },
   {
     accessorKey: "sku",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="pl-0"
-        >
-          SKU
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: (ctx) => <ShortableHeaderButton context={ctx} title="SKU" />,
   },
   {
-    accessorKey: "stock", // Added accessorKey to make the stock numeric value sortable
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="pl-0"
-        >
-          Stock
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "stock",
+    header: (ctx) => <ShortableHeaderButton context={ctx} title="Stock" />,
+
     cell: ({ row }) => {
       const stock = row.original.stock;
       const trackInventory = row.original.product.trackInventory;

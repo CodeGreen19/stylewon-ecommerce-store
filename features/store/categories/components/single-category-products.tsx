@@ -9,6 +9,7 @@ import {
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { showToast } from "@/helpers/func-response";
 
 export function SingleCategoryProducts({
   info,
@@ -72,7 +73,7 @@ function DeleteFromCategory({
       onClick={() => {
         startTransition(async () => {
           const res = await removeProductFromCategory(productId, categoryId);
-          toast.success(res.message);
+          showToast(res);
           router.refresh();
         });
       }}

@@ -1,15 +1,14 @@
 "use client";
 
-import { AlertDialogContent } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useInView } from "react-intersection-observer";
 import {
   Card,
+  CardAction,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardAction,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -20,18 +19,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
-import React, { Fragment, useEffect, useState, useTransition } from "react";
+import { Field } from "@/components/ui/field";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { Plus } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React, { Fragment, useEffect, useState, useTransition } from "react";
+import { useInView } from "react-intersection-observer";
+import { toast } from "sonner";
 import {
   addProductToCategory,
   fetchProducts,
 } from "../server/single.category.action";
-import Image from "next/image";
-import { Field } from "@/components/ui/field";
-import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 export function SingleCategoryHeader({
   categoryName,

@@ -36,14 +36,18 @@ import {
   Weight,
   Warehouse,
   Edit,
+  Edit2,
+  Edit2Icon,
+  EditIcon,
 } from "lucide-react";
 import { getSingleProduct } from "../server/products.action";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { StorePageHeader } from "../../shared/components/store-page-header";
 
 type Product = Awaited<ReturnType<typeof getSingleProduct>>[number];
 
-export function SingleProductView({ product }: { product: Product }) {
+export function ViewProduct({ product }: { product: Product }) {
   const [selectedImage, setSelectedImage] = useState(product.images?.[0] ?? "");
 
   const totalStock = useMemo(
@@ -62,25 +66,18 @@ export function SingleProductView({ product }: { product: Product }) {
 
   return (
     <div className="max-w-7xl m-auto space-y-6">
-      {/* Header */}
-      <Card className="p-0 md:ring-0 bg-background">
-        <CardHeader className="p-4 md:p-0">
-          <CardTitle className="text-2xl font-bold truncate">
-            {product.name}
-          </CardTitle>
-          <CardDescription>
-            single product description is here..
-          </CardDescription>
-          <CardAction>
-            <Button
-              nativeButton={false}
-              render={<Link href={`/store/products/${product.id}/update`} />}
-            >
-              Update
-            </Button>
-          </CardAction>
-        </CardHeader>
-      </Card>
+      <StorePageHeader
+        title={product.name}
+        description="Single product descriptions"
+        action={
+          <Button
+            nativeButton={false}
+            render={<Link href={`/store/products/${product.id}/update`} />}
+          >
+            Update <EditIcon />
+          </Button>
+        }
+      />
       <Card>
         <CardHeader>
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">

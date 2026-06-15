@@ -1,9 +1,8 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef, Row } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { getAllProducts } from "../server/products.query";
 
@@ -17,8 +16,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DUMMY_IMAGE } from "@/constants/dummy";
 import Link from "next/link";
 import { useState } from "react";
+import {
+  createSelectionColumn,
+  ShortableHeaderButton,
+} from "../../shared/components/shared-column";
 import { DeleteProductDialog } from "./delete-product-dialog";
 
 export type ProductColumnType = Awaited<
@@ -26,41 +30,11 @@ export type ProductColumnType = Awaited<
 >[number];
 
 export const productsColumn: ColumnDef<ProductColumnType>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        indeterminate={table.getIsSomePageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  createSelectionColumn<ProductColumnType>(),
 
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          className={"pl-0"}
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: (ctx) => <ShortableHeaderButton context={ctx} title="Name" />,
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start gap-2">
@@ -68,10 +42,7 @@ export const productsColumn: ColumnDef<ProductColumnType>[] = [
             height={40}
             width={40}
             className=" object-cover size-10"
-            src={
-              (row.original.images && row.original.images[0]) ||
-              "/images/dummy-img.jpg"
-            }
+            src={(row.original.images && row.original.images[0]) || DUMMY_IMAGE}
             alt={"product img"}
           />
           <div>
@@ -91,41 +62,16 @@ export const productsColumn: ColumnDef<ProductColumnType>[] = [
   },
   {
     accessorKey: "basePrice",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className={"pl-0"}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: (ctx) => <ShortableHeaderButton context={ctx} title="Price" />,
     cell: ({ row }) => {
-      return <div>{row.original.basePrice}</div>;
+      return <div>&#2547;{row.original.basePrice}</div>;
     },
   },
   {
     id: "stock",
-    // 1. Calculate stock totals so TanStack knows how to evaluate numeric values
     accessorFn: (row) =>
       row.productVariants.reduce((prev, curr) => prev + curr.stock, 0),
-    // 2. Wrap the header with your layout sorting button
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className={"pl-0"}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Stock
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    // 3. Render the markup using the pre-calculated value from step 1
+    header: (ctx) => <ShortableHeaderButton context={ctx} title="Stock" />,
     cell: ({ getValue, row }) => {
       const stock = getValue<number>();
       const trackInventory = row.original.trackInventory;
@@ -182,7 +128,6 @@ function ColumnDropdownMenu({ row }: { row: Row<ProductColumnType> }) {
             >
               Update
             </DropdownMenuItem>
-            <DropdownMenuItem>Duplicate</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => setDeleteProduct(row.original)}

@@ -1,34 +1,92 @@
+"use client";
+
 import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import { Heart, Home, SearchIcon, UserIcon } from "lucide-react";
-import { CartButton } from "./cart-button";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { cn } from "@/lib/utils";
+import {
+  HomeIcon,
+  List,
+  LucideIcon,
+  SearchIcon,
+  ShoppingCartIcon,
+  UserIcon,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 import { UserButton } from "./user-button";
 
 export function MobileNav() {
+  const [value, setValue] = useState<string>("");
   return (
-    <div className="border-b bg-secondary">
-      <nav className="flex items-center justify-between h-20 px-4">
-        <div className="space-y-1">
-          <div className="h-1 w-10 bg-foreground"></div>
-          <div className="h-1 w-10 bg-foreground"></div>
-        </div>
+    <div className="bg-white sticky top-0 shadow-xs">
+      <div className="flex items-center justify-between px-4 pt-2">
         <Logo />
-        <div className="flex items-center gap-1">
-          <SearchIcon />
+        <div className="flex gap-1 flex-col">
+          <div className="w-10 h-1 bg-black"></div>
+          <div className="w-10 h-1 bg-black"></div>
         </div>
-      </nav>
-      <div className="flex items-center justify-between bg-primary text-white px-4 py-2 fixed bottom-0 left-0 w-full z-50">
-        <Button variant={"ghost"} size={"icon-lg"}>
-          <Home className="size-5" />
-        </Button>
-        <Button variant={"ghost"} size={"icon-lg"}>
-          <Heart className="size-5" />
-        </Button>
-        <CartButton />
-        <UserButton type="MOBILE">
-          <UserIcon className="size-5" />
-        </UserButton>
       </div>
+      <div className="px-4">
+        <InputGroup className=" 0">
+          <InputGroupInput
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Search..."
+          />
+          <InputGroupAddon>
+            <SearchIcon />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end" className="cursor-pointer">
+            <X />
+          </InputGroupAddon>
+        </InputGroup>
+      </div>
+      <div>
+        <Navitems />
+      </div>
+    </div>
+  );
+}
+
+type NavItem = {
+  label: string;
+  icon: LucideIcon;
+};
+const items: NavItem[] = [
+  { label: "Home", icon: HomeIcon },
+
+  {
+    label: "Categories",
+    icon: List,
+  },
+  { label: "Cart", icon: ShoppingCartIcon },
+  { label: "Account", icon: UserIcon },
+];
+function Navitems() {
+  return (
+    <div className="flex items-center  justify-between px-6 py-4 z-100   fixed bottom-0 left-0 w-full bg-white border-t border-t-gray-200">
+      {items.map((item) =>
+        item.label === "Account" ? (
+          <UserButton key={item.label}>
+            <NavItem icon={item.icon} label={item.label} />
+          </UserButton>
+        ) : (
+          <NavItem key={item.label} icon={item.icon} label={item.label} />
+        ),
+      )}
+    </div>
+  );
+}
+
+function NavItem({ icon: Icon, label }: NavItem) {
+  return (
+    <div className={cn("flex items-center flex-col gap-0.1")}>
+      <Icon className="size-5" />
+      <span className="text-xs">{label}</span>
     </div>
   );
 }

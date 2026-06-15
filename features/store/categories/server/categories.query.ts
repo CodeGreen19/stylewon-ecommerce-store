@@ -11,7 +11,6 @@ export async function getAllCategories() {
     .select({
       id: categories.id,
       name: categories.name,
-      // Add other category fields here if needed
       productCount:
         sql<number>`count(${productsToCategories.productId})`.mapWith(Number),
     })

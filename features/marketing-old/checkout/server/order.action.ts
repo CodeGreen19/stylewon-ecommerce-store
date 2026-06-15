@@ -62,26 +62,26 @@ export async function createOrder(input: OrderSchemaType) {
     };
   }
 
-  if (checkOutData.address) {
-    await db
-      .update(addresses)
-      .set({
-        addressLine1: data.shippingAddress,
-        recipientName: data.customerName,
-        phone: data.customerPhone,
-      })
-      .where(eq(addresses.userId, session.user.id));
-  } else {
-    await db.insert(addresses).values({
-      addressLine1: data.shippingAddress,
-      recipientName: data.customerName,
-      phone: data.customerPhone,
-      city: "dummy-city",
-      country: "dummy-country",
-      userId: session.user.id,
-    });
-    console.log("address-created");
-  }
+  // if (checkOutData.address) {
+  //   await db
+  //     .update(addresses)
+  //     .set({
+  //       addressLine1: data.shippingAddress,
+  //       recipientName: data.customerName,
+  //       phone: data.customerPhone,
+  //     })
+  //     .where(eq(addresses.userId, session.user.id));
+  // } else {
+  //   await db.insert(addresses).values({
+  //     addressLine1: data.shippingAddress,
+  //     recipientName: data.customerName,
+  //     phone: data.customerPhone,
+  //     city: "dummy-city",
+  //     country: "dummy-country",
+  //     userId: session.user.id,
+  //   });
+  //   console.log("address-created");
+  // }
   const { subtotal, shippingFee } = checkOutData;
 
   const orderNumber = crypto.randomUUID().slice(0, 8).toUpperCase();

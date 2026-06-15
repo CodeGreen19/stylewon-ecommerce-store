@@ -1,6 +1,6 @@
-import { boolean, pgTable, text, varchar } from "drizzle-orm/pg-core";
-import { createdAt, id, updatedAt } from "../helpers";
 import { relations } from "drizzle-orm";
+import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { createdAt, id, updatedAt } from "../helpers";
 import { user } from "./user";
 
 export const addresses = pgTable("addresses", {
@@ -8,7 +8,7 @@ export const addresses = pgTable("addresses", {
 
   userId: text("user_id").notNull(),
 
-  recipientName: varchar("recipient_name", {
+  fullName: varchar("fullName", {
     length: 200,
   }).notNull(),
 
@@ -16,15 +16,11 @@ export const addresses = pgTable("addresses", {
     length: 50,
   }).notNull(),
 
-  country: varchar("country", {
-    length: 100,
-  }).notNull(),
-
-  state: varchar("state", {
+  district: varchar("district", {
     length: 100,
   }),
 
-  city: varchar("city", {
+  thana: varchar("thana", {
     length: 100,
   }).notNull(),
 
@@ -32,11 +28,7 @@ export const addresses = pgTable("addresses", {
     length: 50,
   }),
 
-  addressLine1: text("address_line_1").notNull(),
-
-  addressLine2: text("address_line_2"),
-
-  isDefault: boolean("is_default").default(false),
+  receivingLocation: text("receiving_location").notNull(),
 
   createdAt,
   updatedAt,

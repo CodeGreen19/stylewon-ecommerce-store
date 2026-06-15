@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { categories, products, productsToCategories } from "@/drizzle/schema";
+import { categories, productsToCategories } from "@/drizzle/schema";
 import { eq, ilike } from "drizzle-orm";
 
 export async function getProducts() {

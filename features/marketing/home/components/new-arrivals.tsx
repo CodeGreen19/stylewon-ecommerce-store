@@ -1,35 +1,46 @@
-import { Button } from "@/components/ui/button";
-import { Suspense } from "react";
-import { ProductCard } from "../../shared/components/product-card";
-import { SectionTitle } from "../../shared/components/section-title";
+import React, { Suspense } from "react";
+import { SectionHeader } from "./section-header";
 import { getProductsByCategoryName } from "../server/home.query";
+import {
+  ProductCard,
+  ProductCardSkeleton,
+} from "../../components/product-card";
 
-export function NewArrivalsSection() {
+export default function NewArrivals() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <NewArrivalsSectionListing />
-    </Suspense>
+    <section>
+      <SectionHeader>New Arrivals</SectionHeader>
+      <Suspense fallback={<ProductsLoading />}>
+        <Products />
+      </Suspense>
+    </section>
   );
 }
 
-async function NewArrivalsSectionListing() {
-  const res = await getProductsByCategoryName("Shirts");
+async function Products() {
+  const products = await getProductsByCategoryName("shirts");
+  if (products.length === 0) {
+    return (
+      <div className="h-20 w-full border flex items-center justify-center">
+        No products !
+      </div>
+    );
+  }
 
   return (
-    <section className=" py-16">
-      <div className="mx-auto max-w-7xl px-4">
-        <SectionTitle title="New Arrivals" />
-
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          {res.map(({ product }) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-
-        <div className="mt-14 flex justify-center">
-          <Button>View all</Button>
-        </div>
-      </div>
-    </section>
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
+      {products.map((data) => (
+        <ProductCard key={data.productId} product={data.product} />
+      ))}
+    </div>
+  );
+}
+async function ProductsLoading() {
+  return (
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <ProductCardSkeleton key={i} />
+      ))}
+    </div>
   );
 }

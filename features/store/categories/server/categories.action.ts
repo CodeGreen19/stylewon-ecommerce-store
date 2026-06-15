@@ -8,12 +8,13 @@ import {
   categorySchema,
   CategorySchemaType,
 } from "../schemas/categories.schema";
+import { errorResponse, successResponse } from "@/helpers/func-response";
 
 export async function addCategory(category: CategorySchemaType) {
   const { success, data } = categorySchema.safeParse(category);
 
   if (!success) {
-    throw new Error("Invalid category!");
+    return errorResponse("Invalid category!");
   }
 
   await db.insert(categories).values({
@@ -21,7 +22,7 @@ export async function addCategory(category: CategorySchemaType) {
   });
 
   updateTag("categories");
-  return { message: "New category created" };
+  return successResponse("New category created");
 }
 export async function updateCategory(
   category: CategorySchemaType & { categoryId: string },
@@ -29,9 +30,8 @@ export async function updateCategory(
   const { success, data } = categorySchema.safeParse(category);
 
   if (!success) {
-    throw new Error("Invalid category!");
+    return errorResponse("Invalid category!");
   }
-
   await db
     .update(categories)
     .set({
@@ -40,12 +40,12 @@ export async function updateCategory(
     .where(eq(categories.id, category.categoryId));
 
   updateTag("categories");
-  return { message: " Category updated" };
+  return successResponse("Category updated");
 }
 
 export async function deleteCategory(categoryId: string) {
   await db.delete(categories).where(eq(categories.id, categoryId));
 
   updateTag("categories");
-  return { message: "Category deleted" };
+  return successResponse("Category deleted");
 }

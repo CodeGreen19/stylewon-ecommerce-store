@@ -17,12 +17,13 @@ export function CartButton() {
       render={<Link href={"/cart"} />}
       variant={"ghost"}
       size={"icon-lg"}
-      className={"relative"}
+      className={"relative flex flex-col"}
     >
       <ShoppingCartIcon className="size-5" />
       {data && data.count > 0 && (
         <div className="size-4 absolute top-0 right-2">{data.count}</div>
       )}
+      <span>Cart</span>
     </Button>
   );
 }

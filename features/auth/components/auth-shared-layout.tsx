@@ -24,7 +24,6 @@ export function AuthLayout({
   return (
     <main className="min-h-screen bg-white text-black">
       <div className="grid min-h-screen lg:grid-cols-2">
-        {/* LEFT SIDE */}
         <section className="flex items-center justify-center px-4 py-10 sm:px-6 lg:px-12">
           <div className="w-full max-w-md">
             <div className="mb-8">
@@ -55,38 +54,14 @@ export function AuthLayout({
           </div>
         </section>
 
-        {/* RIGHT SIDE */}
-        <section className="relative hidden overflow-hidden border-l bg-neutral-50 lg:flex">
-          {/* GRID BACKGROUND */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] bg-[size:5rem_5rem]" />
-
-          {/* SOFT GLOW */}
-          <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/5 blur-3xl" />
-
-          {/* ANIMATED SHAPES */}
-          <div className="absolute left-24 top-24 h-28 w-28 animate-pulse rounded-full border border-black/10 bg-white" />
-
-          <div className="absolute bottom-20 right-24 h-40 w-40 animate-bounce rounded-full border border-black/5 bg-white/80 [animation-duration:5s]" />
-
-          <div className="absolute left-1/2 top-1/3 h-20 w-20 animate-ping rounded-full bg-black/5 [animation-duration:4s]" />
-
-          {/* FLOATING UI CARD */}
-          <div className="relative z-10 flex flex-1 items-center justify-center p-10">
-            <div className="w-full max-w-md rounded-3xl border border-neutral-200 bg-white/80 p-8 shadow-2xl backdrop-blur-xl">
-              <div className="space-y-4">
-                <div className="h-3 w-24 rounded-full bg-neutral-200" />
-
-                <div className="space-y-3">
-                  <div className="h-14 rounded-2xl bg-neutral-100" />
-                  <div className="h-14 rounded-2xl bg-neutral-100" />
-                  <div className="h-14 rounded-2xl bg-neutral-100" />
-                </div>
-
-                <div className="pt-4">
-                  <div className="h-12 rounded-full bg-black" />
-                </div>
-              </div>
-            </div>
+        <section className="relative hidden overflow-hidden border-l lg:flex bg-gray-50">
+          <div className="grid h-full w-full grid-cols-12 grid-rows-12">
+            {Array.from({ length: 144 }).map((_, i) => (
+              <div
+                key={i}
+                className="border-[0.5px] border-dashed border-neutral-200 transition-colors hover:bg-primary/80"
+              />
+            ))}
           </div>
         </section>
       </div>

@@ -1,6 +1,5 @@
-import { AccountProfilePage } from "@/features/marketing/account/pages/account-profile-page";
-import React from "react";
+import ProfilePage from "@/features/marketing/accounts/pages/profile-page";
 
 export default function page() {
-  return <AccountProfilePage />;
+  return <ProfilePage />;
 }

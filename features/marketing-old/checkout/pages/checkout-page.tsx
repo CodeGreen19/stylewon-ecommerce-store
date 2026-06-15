@@ -13,18 +13,10 @@ export function CheckoutPage() {
 
 async function CheckoutInfo() {
   const res = await getCheckout();
-  const defaultValues: typeof orderDefaultValue = {
-    customerName: res.address?.recipientName || "",
-    customerPhone: res.address?.phone || "",
-    paymentType: "Cash on delivery",
-    shippingAddress: res.address?.addressLine1 || "",
-    shippingFee: res.shippingFee,
-    subtotal: res.subtotal,
-    notes: "",
-  };
+
   return (
     <div className="max-w-7xl m-auto">
-      <OrderForm defaultValues={defaultValues} />
+      {/* <OrderForm defaultValues={defaultValues} /> */}
     </div>
   );
 }

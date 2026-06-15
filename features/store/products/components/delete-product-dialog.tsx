@@ -40,9 +40,7 @@ export function DeleteProductDialog({
             account and remove your data from our servers.
           </DialogDescription>
         </DialogHeader>
-        <div>
-          <p className=" text-xl">Name : {deleteProduct?.name}</p>
-        </div>
+
         <DialogFooter>
           <Button variant={"secondary"}>Cancel</Button>
           <Button

@@ -1,12 +1,14 @@
 import React from "react";
-import { Footer } from "./footer";
 import { Navbar } from "./navbar";
+import { Footer } from "./footer";
 
-export function MarketingLayout(props: LayoutProps<"/">) {
+export function MarketingLayout(Props: LayoutProps<"/">) {
   return (
-    <div className="">
+    <div className="bg-gray-100">
       <Navbar />
-      <div className="min-h-[calc(100vh-16rem)]">{props.children}</div>
+      <div className="min-h-screen px-4 xl:px-0 max-w-7xl m-auto">
+        {Props.children}
+      </div>
       <Footer />
     </div>
   );

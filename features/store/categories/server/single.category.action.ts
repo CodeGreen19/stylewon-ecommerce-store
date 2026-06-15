@@ -2,6 +2,7 @@
 
 import { db } from "@/drizzle/db";
 import { categories, products, productsToCategories } from "@/drizzle/schema";
+import { errorResponse, successResponse } from "@/helpers/func-response";
 import { and, eq } from "drizzle-orm";
 import { updateTag } from "next/cache";
 
@@ -10,9 +11,7 @@ export async function addProductToCategory(
   categoryId: string,
 ) {
   if (productIds.length === 0 || !categoryId) {
-    return {
-      message: "Missing product or category identifier.",
-    };
+    return errorResponse("Missing product or category identifier.");
   }
 
   const data: (typeof productsToCategories.$inferInsert)[] = productIds.map(
@@ -20,7 +19,7 @@ export async function addProductToCategory(
   );
   await db.insert(productsToCategories).values(data).onConflictDoNothing();
   updateTag("categories");
-  return { message: "Product linked successfully!" };
+  return successResponse("Product linked successfully!");
 }
 
 export async function removeProductFromCategory(
@@ -28,7 +27,7 @@ export async function removeProductFromCategory(
   categoryId: string,
 ) {
   if (!productId || !categoryId) {
-    return { message: "Missing parameters." };
+    return errorResponse("Missing parameters.");
   }
 
   await db
@@ -40,7 +39,7 @@ export async function removeProductFromCategory(
       ),
     );
   updateTag("categories");
-  return { message: "Product removed from category." };
+  return successResponse("Product removed from category.");
 }
 
 export async function getProductsByCategory(categoryId: string) {
@@ -49,7 +48,7 @@ export async function getProductsByCategory(categoryId: string) {
     with: {
       products: {
         with: {
-          product: true, // Pull core product row fields
+          product: true,
         },
       },
     },

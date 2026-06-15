@@ -47,6 +47,7 @@ import {
 } from "../server/categories.action";
 import { getAllCategories } from "../server/categories.query";
 import { useRouter } from "next/navigation";
+import { showToast } from "@/helpers/func-response";
 
 type CategoryType = Awaited<ReturnType<typeof getAllCategories>>[number];
 
@@ -164,8 +165,8 @@ function CategoryDeleteDialogButton({ category }: { category: CategoryType }) {
             disabled={isPending}
             onClick={() => {
               startTransition(async () => {
-                const data = await deleteCategory(category.id);
-                toast.info(data.message);
+                const res = await deleteCategory(category.id);
+                showToast(res);
                 setOpen(false);
               });
             }}
@@ -185,8 +186,8 @@ function CategoryCreateDialogButton() {
     defaultValues: { name: "" } satisfies CategorySchemaType,
     validators: { onChange: categorySchema },
     onSubmit: async ({ value }) => {
-      const data = await addCategory(value);
-      toast.success(data.message);
+      const res = await addCategory(value);
+      showToast(res);
       form.reset();
       setOpen(false);
     },
@@ -255,8 +256,8 @@ function CategoryUpdateDialogButton({ category }: { category: CategoryType }) {
     defaultValues: { name: category.name } satisfies CategorySchemaType,
     validators: { onChange: categorySchema },
     onSubmit: async ({ value }) => {
-      const data = await updateCategory({ ...value, categoryId: category.id });
-      toast.success(data.message);
+      const res = await updateCategory({ ...value, categoryId: category.id });
+      showToast(res);
       form.reset();
       setOpen(false);
     },
