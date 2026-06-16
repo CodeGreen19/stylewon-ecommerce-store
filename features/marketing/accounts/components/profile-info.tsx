@@ -17,7 +17,7 @@ export function ProfileInfo() {
   const user = data?.user;
 
   return (
-    <Card className="rounded-none">
+    <Card>
       <CardHeader className="pb-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">

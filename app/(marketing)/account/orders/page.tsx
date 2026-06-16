@@ -1,6 +1,5 @@
-import { AccountOrdersPage } from "@/features/marketing-old/account/pages/account-orders-page";
-import React from "react";
+import { OrdersPage } from "@/features/marketing/accounts/pages/orders-page";
 
 export default function page() {
-  return <AccountOrdersPage />;
+  return <OrdersPage />;
 }

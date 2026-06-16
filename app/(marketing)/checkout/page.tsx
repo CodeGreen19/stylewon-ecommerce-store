@@ -1,5 +1,4 @@
-import { CheckoutPage } from "@/features/marketing-old/checkout/pages/checkout-page";
-import React from "react";
+import { CheckoutPage } from "@/features/marketing/checkout/pages/checkout-page";
 
 export default function page() {
   return <CheckoutPage />;

@@ -60,6 +60,10 @@ function Navitems() {
           <UserButton key={item.label}>
             <NavItem icon={item.icon} label={item.label} />
           </UserButton>
+        ) : item.label === "Cart" ? (
+          <CartSheet key={item.label}>
+            <NavItem icon={item.icon} label={item.label} />
+          </CartSheet>
         ) : (
           <NavItem key={item.label} icon={item.icon} label={item.label} />
         ),
@@ -98,6 +102,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { UserButton } from "./user-button";
+import { CartSheet } from "../../cart/components/cart-sheet";
 
 const components: { title: string; href: string; description: string }[] = [
   {

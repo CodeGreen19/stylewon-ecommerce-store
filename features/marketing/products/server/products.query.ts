@@ -2,6 +2,7 @@
 
 import { db } from "@/drizzle/db";
 import { products } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export async function fetchProducts({ pageParam = 0 }) {
   const LIMIT = 20;
@@ -20,4 +21,12 @@ export async function fetchProducts({ pageParam = 0 }) {
     products: productsData,
     nextCursor: hasMore ? pageParam + LIMIT : null,
   };
+}
+
+export async function getSingleProductById(productId: string) {
+  const [product] = await db.query.products.findMany({
+    where: eq(products.id, productId),
+    with: { productOptions: { with: { values: true } }, productVariants: true },
+  });
+  return product;
 }

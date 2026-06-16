@@ -1,12 +1,11 @@
 "use server";
 
-import { addressSchema, AddressSchemaType } from "../schema/address.schema";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { db } from "@/drizzle/db";
 import { addresses } from "@/drizzle/schema";
+import { auth } from "@/lib/auth";
+import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { addressSchema, AddressSchemaType } from "../schema/address.schema";
 
 export async function createOrUpdateAddress(values: AddressSchemaType) {
   const session = await auth.api.getSession({

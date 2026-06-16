@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { UserButton } from "./user-button";
+import { CartSheet } from "../../cart/components/cart-sheet";
 
 export function MobileNav() {
   const [value, setValue] = useState<string>("");
@@ -74,6 +75,10 @@ function Navitems() {
           <UserButton key={item.label}>
             <NavItem icon={item.icon} label={item.label} />
           </UserButton>
+        ) : item.label === "Cart" ? (
+          <CartSheet key={item.label}>
+            <NavItem icon={item.icon} label={item.label} />
+          </CartSheet>
         ) : (
           <NavItem key={item.label} icon={item.icon} label={item.label} />
         ),

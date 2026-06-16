@@ -27,22 +27,22 @@ export const orders = pgTable("orders", {
 
   status: orderStatusEnum().default("pending").notNull(),
   paymentStatus: paymentStatusEnum().default("pending").notNull(),
+  paymentMethod: varchar({ length: 100 }).notNull(),
 
   subtotal: integer("subtotal").notNull(),
   shippingFee: integer("shipping_fee").notNull(),
   discount: integer("discount").default(0),
   total: integer("total").notNull(),
 
-  customerName: varchar("customer_name", {
+  fullName: varchar("full_name", {
     length: 200,
   }).notNull(),
 
-  customerPhone: varchar("customer_phone", {
+  phoneNumber: varchar("phone_number", {
     length: 50,
   }).notNull(),
 
   shippingAddress: text("shipping_address").notNull(),
-
   notes: text("notes"),
 
   createdAt,

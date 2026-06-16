@@ -18,7 +18,7 @@ export const addresses = pgTable("addresses", {
 
   district: varchar("district", {
     length: 100,
-  }),
+  }).notNull(),
 
   thana: varchar("thana", {
     length: 100,
