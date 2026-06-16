@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,66 +10,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef, Row } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-
-import { getOrders } from "../server/order.action";
+import { MoreHorizontal } from "lucide-react";
+import {
+  createSelectionColumn,
+  ShortableHeaderButton,
+} from "../../shared/components/shared-column";
+import { getOrders } from "../server/orders.query";
+import { useState } from "react";
+import { ViewDetailsSheet } from "./view-details-sheet";
+import { UpdateStatusDialog } from "./update-status-dialog";
 
 export type OrdersColumnType = Awaited<ReturnType<typeof getOrders>>[number];
 
 export const ordersColumn: ColumnDef<OrdersColumnType>[] = [
+  createSelectionColumn<OrdersColumnType>(),
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        indeterminate={table.getIsSomePageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
+    accessorKey: "fullName",
+    header: (ctx) => (
+      <ShortableHeaderButton context={ctx} title="Customer Name" />
     ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
+  },
+  {
+    accessorKey: "phoneNumber",
+    header: (ctx) => (
+      <ShortableHeaderButton context={ctx} title="Phone Number" />
     ),
-    enableSorting: false,
-    enableHiding: false,
   },
   {
-    accessorKey: "customerName", // Added accessorKey so TanStack Table knows how to sort this column
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="pl-0"
-        >
-          Customer Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "customerPhone", // Added accessorKey so TanStack Table knows how to sort this column
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="pl-0"
-        >
-          Customer Phone
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    header: "Status",
     accessorKey: "status",
+    header: (ctx) => <ShortableHeaderButton context={ctx} title="Status" />,
   },
 
   {
@@ -82,6 +50,8 @@ export const ordersColumn: ColumnDef<OrdersColumnType>[] = [
 ];
 
 function ColumnDropdownMenu({ row }: { row: Row<OrdersColumnType> }) {
+  const [updateStatus, setUpdateStatus] = useState(false);
+  const [viewDetails, setViewDetails] = useState(false);
   return (
     <div>
       <DropdownMenu>
@@ -96,10 +66,25 @@ function ColumnDropdownMenu({ row }: { row: Row<OrdersColumnType> }) {
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Update Status</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setUpdateStatus(true)}>
+              Update Status
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setViewDetails(true)}>
+              View Details
+            </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+      <ViewDetailsSheet
+        orderId={row.original.id}
+        open={viewDetails}
+        setOpen={setViewDetails}
+      />
+      <UpdateStatusDialog
+        open={updateStatus}
+        setOpen={setUpdateStatus}
+        orderId={row.original.id}
+      />
     </div>
   );
 }

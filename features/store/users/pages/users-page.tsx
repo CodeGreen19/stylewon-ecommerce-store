@@ -1,10 +1,15 @@
 import React, { Suspense } from "react";
 import { getUsers } from "../server/user.server";
+import { DataTableSkeleton } from "@/components/table/data-table-skeleton";
+import { DataTable } from "@/components/table/data-table";
+import { userColumn } from "../components/users-column";
+import { StorePageHeader } from "../../shared/components/store-page-header";
 
 export function UsersPage() {
   return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
+    <div className="space-y-3">
+      <StorePageHeader title="Users" description=" Your registered users" />
+      <Suspense fallback={<DataTableSkeleton />}>
         <ShowUsers />
       </Suspense>
     </div>
@@ -12,16 +17,7 @@ export function UsersPage() {
 }
 
 async function ShowUsers() {
-  const { users } = await getUsers();
+  const users = await getUsers();
 
-  return (
-    <div>
-      {users.map((user) => (
-        <div key={user.id} className="p-2 border">
-          <h1>{user.name}</h1>
-          <h2>{user.email}</h2>
-        </div>
-      ))}
-    </div>
-  );
+  return <DataTable columns={userColumn} data={users} />;
 }
