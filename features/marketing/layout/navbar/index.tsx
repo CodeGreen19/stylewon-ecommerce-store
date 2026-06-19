@@ -1,17 +1,7 @@
 "use client";
 
-import { Logo } from "@/components/logo";
-import { cn } from "@/lib/utils";
-import {
-  Heart,
-  HomeIcon,
-  type LucideIcon,
-  Search,
-  ShoppingCartIcon,
-  UserIcon,
-} from "lucide-react";
-import { MobileNav } from "./mobile-nav";
 import { DesktopNav } from "./desktop-nav";
+import { MobileNav } from "./mobile-nav";
 
 export function Navbar() {
   return (

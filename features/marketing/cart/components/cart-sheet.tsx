@@ -52,7 +52,7 @@ export function CartSheet({ children }: { children: ReactNode }) {
         }
       />
 
-      <SheetContent className="flex w-5/6 flex-col sm:max-w-lg">
+      <SheetContent className="flex data-[side=right]:w-11/12 flex-col sm:max-w-lg">
         <SheetHeader>
           <SheetTitle>Shopping Cart</SheetTitle>
 

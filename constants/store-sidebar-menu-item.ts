@@ -1,6 +1,7 @@
 import {
   BookOpen,
   ChartPie,
+  Handshake,
   LucideIcon,
   Server,
   Settings,
@@ -37,6 +38,11 @@ export const storeSidebarMenu: SidebarMenuType[] = [
     title: "Orders",
     icon: Server,
     url: "/store/orders",
+  },
+  {
+    title: "Manual Sells",
+    icon: Handshake,
+    url: "/store/manual-sells",
   },
   {
     title: "Users",

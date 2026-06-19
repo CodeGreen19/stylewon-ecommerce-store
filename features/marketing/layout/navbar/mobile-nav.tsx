@@ -19,6 +19,16 @@ import {
 import { useState } from "react";
 import { UserButton } from "./user-button";
 import { CartSheet } from "../../cart/components/cart-sheet";
+import { ProductSearch } from "./product-search";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { staticCategoris } from "../constants";
+import { useRouter } from "next/navigation";
 
 export function MobileNav() {
   const [value, setValue] = useState<string>("");
@@ -26,25 +36,10 @@ export function MobileNav() {
     <div className="bg-white sticky top-0 shadow-xs">
       <div className="flex items-center justify-between px-4 pt-2">
         <Logo />
-        <div className="flex gap-1 flex-col">
-          <div className="w-10 h-1 bg-black"></div>
-          <div className="w-10 h-1 bg-black"></div>
-        </div>
+        <Navmenu />
       </div>
       <div className="px-4">
-        <InputGroup className=" 0">
-          <InputGroupInput
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="Search..."
-          />
-          <InputGroupAddon>
-            <SearchIcon />
-          </InputGroupAddon>
-          <InputGroupAddon align="inline-end" className="cursor-pointer">
-            <X />
-          </InputGroupAddon>
-        </InputGroup>
+        <ProductSearch />
       </div>
       <div>
         <Navitems />
@@ -93,5 +88,38 @@ function NavItem({ icon: Icon, label }: NavItem) {
       <Icon className="size-5" />
       <span className="text-xs">{label}</span>
     </div>
+  );
+}
+
+function Navmenu() {
+  const router = useRouter();
+  return (
+    <Sheet>
+      <SheetTrigger
+        nativeButton={false}
+        render={
+          <div className="flex gap-1 flex-col">
+            <div className="w-10 h-1 bg-black"></div>
+            <div className="w-10 h-1 bg-black"></div>
+          </div>
+        }
+      ></SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Categories</SheetTitle>
+        </SheetHeader>
+        <ul className="px-4">
+          {staticCategoris.map((cat) => (
+            <li
+              key={cat.label}
+              onClick={() => router.push(`?category=${cat.tag}`)}
+              className="p-2 hover:bg-accent-foreground cursor-pointer"
+            >
+              {cat.label}
+            </li>
+          ))}
+        </ul>
+      </SheetContent>
+    </Sheet>
   );
 }
